@@ -1,0 +1,68 @@
+﻿@model IEnumerable<Be_25dh110275_NguyenHoangAnh.Models.Product>
+
+<style>
+    .custom-product-table {
+        width: 100%;
+        margin-top: 10px;
+        border-collapse: collapse;
+        background-color: #FFFDE7;
+    }
+
+        .custom-product-table th {
+            background-color: #FFEB3B;
+            color: #0000FF;
+            padding: 12px;
+            text-align: center;
+            border: 1px solid #FBC02D;
+        }
+
+        .custom-product-table td {
+            padding: 12px;
+            vertical-align: middle;
+            border: 1px solid #FFE082;
+        }
+
+        .custom-product-table tbody tr:hover {
+            background-color: #FFF9C4;
+            transition: 0.2s;
+        }
+</style>
+
+<table class="table custom-product-table">
+    <tr>
+        <th class="col-md-2">HÌNH ẢNH</th>
+        <th class="col-md-3">TÊN SẢN PHẨM</th>
+        <th class="col-md-1">ĐƠN GIÁ</th>
+        <th class="col-md-2">DANH MỤC</th>
+        <th class="col-md-4"> CHỨC NĂNG </th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td style="text-align: center;">
+                <img src="@Html.DisplayFor(modelItem => item.ProductImage)" alt="Product Image" style="height: 100px; max-width: 100px; object-fit: contain; border-radius: 4px; border: 1px solid #ddd; background: #fff; padding: 2px;" />
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ProductName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ProductPrice)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Category.CategoryName)
+            </td>
+            <td style="text-align: center;">
+                @Html.ActionLink("Sửa", "Edit", new { id = item.ProductID }, new { @class = "btn btn-primary btn-sm" })
+                @Html.ActionLink("Chi tiết", "Details", new { id = item.ProductID }, new { @class = "btn btn-primary btn-sm" })
+                @Html.ActionLink("Xoá", "Delete", new { id = item.ProductID }, new { @class = "btn btn-primary btn-sm" })
+            </td>
+        </tr>
+    }
+</table>
+
+<div class="form-group" style="margin-top: 15px;">
+    <div class="col-md-offset-0 col-md-12">
+        @Html.ActionLink("THÊM MỚI", "Create", null, new { @class = "btn btn-primary" })
+    </div>
+</div>

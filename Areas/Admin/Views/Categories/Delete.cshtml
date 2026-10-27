@@ -1,0 +1,58 @@
+﻿@model Be_25dh110275_NguyenHoangAnh.Models.Category
+
+@{
+    ViewBag.Title = "Delete";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<style>
+    .search-container, .order-container {
+        padding-top: 20px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    img {
+        width: 100px;
+        max-height: 100px;
+    }
+    .page-title-admin {
+        background-color: #1E8A54 !important;
+        color: #000000 !important;
+        padding: 10px 15px;
+        font-weight: bold;
+        font-size: 22px;
+        width: 100%;
+        margin-bottom: 20px;
+        box-sizing: border-box;
+    }
+</style>
+<div class="page-title-admin">
+    XÓA DANH MỤC
+</div>
+<h4 class="alert-danger" style="padding: 10px; border-radius: 4px;">Bạn thực sự muốn xóa danh mục này chứ?</h4>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <hr />
+
+        <div class="form-group">
+           
+            <div style="font-weight: bold; text-align: left;">Tên danh mục</div>
+            <div class="col-md-10">
+                <p class="form-control-static">@Html.DisplayFor(model => model.CategoryName)</p>
+            </div>
+        </div>
+
+        <div class="form-group" style="margin-top: 15px;">
+            <div class="col-md-offset-0 col-md-10">
+                <input type="submit" value="Xóa" class="btn btn-danger" />
+                @Html.ActionLink("Quay lại danh sách", "Index", null, new { @class = "btn btn-primary btn-sm" })
+            </div>
+        </div>
+    </div>
+}

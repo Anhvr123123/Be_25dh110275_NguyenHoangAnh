@@ -1,0 +1,87 @@
+﻿@model IEnumerable<Be_25dh110275_NguyenHoangAnh.Models.Category>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<style>
+    .product-title {
+        background-color: #1E8A54;
+        color: #1a1a1a;
+        padding: 10px 15px;
+        font-weight: bold;
+        font-size: 22px;
+        width: 100%;
+        margin-bottom: 20px;
+        box-sizing: border-box;
+    }
+
+    .custom-category-table {
+        width: 100%;
+        margin-top: 10px;
+        border-collapse: collapse;
+        background-color: #FFFDE7;
+    }
+
+        .custom-category-table th {
+            background-color: #FFEB3B;
+            color: #0000FF;
+            padding: 12px;
+            text-align: center;
+            border: 1px solid #FBC02D;
+        }
+
+        .custom-category-table td {
+            padding: 12px;
+            vertical-align: middle;
+            border: 1px solid #FFE082;
+        }
+
+        .custom-category-table tbody tr:hover {
+            background-color: #FFF9C4;
+            transition: 0.2s;
+        }
+
+    .page-title-admin {
+        background-color: #1E8A54 !important;
+        color: #000000 !important;
+        padding: 10px 15px;
+        font-weight: bold;
+        font-size: 22px;
+        width: 100%;
+        margin-bottom: 20px;
+        box-sizing: border-box;
+    }
+</style>
+
+<div class="product-title">
+    DANH SÁCH DANH MỤC
+</div>
+
+<table class="table custom-category-table">
+    <tr>
+        <th class="col-md-8">TÊN DANH MỤC</th>
+        <th class="col-md-4"></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.CategoryName)
+            </td>
+            <td style="text-align: center;">
+                @Html.ActionLink("Sửa", "Edit", new { id = item.CategoryID }, new { @class = "btn btn-primary btn-sm" })
+                @Html.ActionLink("Chi tiết", "Details", new { id = item.CategoryID }, new { @class = "btn btn-primary btn-sm" })
+                @Html.ActionLink("Xoá", "Delete", new { id = item.CategoryID }, new { @class = "btn btn-primary btn-sm" })
+            </td>
+        </tr>
+    }
+</table>
+
+<div class="form-group" style="margin-top: 15px;">
+    <div class="col-md-offset-0 col-md-12">
+        @Html.ActionLink("THÊM MỚI", "Create", null, new { @class = "btn btn-primary" })
+    </div>
+</div>

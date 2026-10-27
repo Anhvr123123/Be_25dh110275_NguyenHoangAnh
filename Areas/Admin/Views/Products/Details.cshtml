@@ -1,0 +1,32 @@
+﻿@model Be_25dh110275_NguyenHoangAnh.Models.Product
+
+@{
+    ViewBag.Title = "Details";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+<style>
+        .page-title-admin {
+                background-color: #1E8A54 !important;
+                color: #000000 !important;
+                padding: 10px 15px;
+                font-weight: bold;
+                font-size: 22px;
+                width: 100%;
+                margin-bottom: 20px;
+                box-sizing: border-box;
+
+    }
+</style>
+<div class="page-title-admin">
+   CHI TIẾT SẢN PHẨM
+</div>
+
+@Html.Partial("PVProdInfo", Model)
+
+<div class="form-group">
+    <div class="col-md-offset-3 col-md-9">
+        @Html.ActionLink("SỬA", "Edit", new { id = Model.ProductID }, new { @class = "btn btn-primary btn-sm" }) |
+        @Html.ActionLink("QUAY LẠI DANH SÁCH", "Index", null, new { @class = "btn btn-primary btn-sm" })
+    </div>
+
+</div>

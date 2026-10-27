@@ -1,0 +1,45 @@
+﻿@model Be_25dh110275_NguyenHoangAnh.Models.Product
+
+
+@{
+    ViewBag.Title = "Delete";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+<style>
+        .page-title-admin {
+                background-color: #1E8A54 !important;
+                color: #000000 !important;
+                padding: 10px 15px;
+                font-weight: bold;
+                font-size: 22px;
+                width: 100%;
+                margin-bottom: 20px;
+                box-sizing: border-box;
+
+    }
+</style>
+
+<div class="page-title-admin">
+    XÓA SẢN PHẨM
+</div>
+
+<h4 class="alert-danger">Bạn thực sự muốn xóa sản phẩm này à?</h4>
+@Html.Partial("PVProdInfo", Model)
+
+
+@*<div class="form-group">
+    <div class="col-md-offset-3 col-md-9">
+        @Html.ActionLink("Xóa", "Delete", new { id = Model.ProductID },
+            new { @class = "btn btn-primary" })
+        @Html.ActionLink("Quay lại danh sách", "Index", null,
+            new { @class = "btn btn-primary" })
+    </div>
+</div>*@
+
+<div class="form-group">
+    @using (Html.BeginForm("Delete", "Products", new { id = Model.ProductID }, FormMethod.Post))
+    {
+        @Html.AntiForgeryToken() <input type="submit" value="Xóa" class="btn btn-primary" />
+        @Html.ActionLink("Quay lại danh sách", "Index", null, new { @class = "btn btn-primary" })
+    }
+</div>

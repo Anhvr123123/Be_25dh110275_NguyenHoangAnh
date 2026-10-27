@@ -1,0 +1,108 @@
+﻿@model Be_25dh110275_NguyenHoangAnh.Models.ViewModel.ProductSearchVM
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Search</title>
+    <style>
+        .product-title {
+            background-color: #1E8A54;
+            color: #212529;
+            padding: 10px 15px;
+            font-weight: bold;
+            font-size: 24px;
+            width: 100%;
+            margin-bottom: 20px;
+            box-sizing: border-box;
+        }
+
+        .filter-form {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            align-items: flex-end;
+            margin-bottom: 25px;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+            .filter-group label {
+                font-weight: bold;
+                margin-bottom: 5px;
+                color: #333;
+            }
+
+        .filter-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+            .page-title-admin {
+                    background-color: #1E8A54 !important;
+                    color: #000000 !important;
+                    padding: 10px 15px;
+                    font-weight: bold;
+                    font-size: 22px;
+                    width: 100%;
+                    margin-bottom: 20px;
+                    box-sizing: border-box;
+
+        }
+    </style>
+</head>
+<body>
+    <div class="page-title-admin">
+        DANH SÁCH SẢN PHẨM
+    </div>
+
+    @using (Html.BeginForm("Index", "Products", FormMethod.Get))
+    {
+        <div class="filter-form">
+            <div class="filter-group">
+                <label>Tên sản phẩm</label>
+                @Html.TextBox("SearchTerm", null, new { @class = "form-control", placeholder = "Nhập tên sản phẩm..." })
+            </div>
+
+            <div class="filter-group">
+                <label>Giá từ</label>
+                @Html.TextBoxFor(m => m.MinPrice, new { @class = "form-control", type = "number", min = "0", placeholder = "Giá thấp nhất" })
+            </div>
+
+            <div class="filter-group">
+                <label>Giá đến</label>
+                @Html.TextBoxFor(m => m.MaxPrice, new { @class = "form-control", type = "number", min = "0", placeholder = "Giá cao nhất" })
+            </div>
+
+            <div class="filter-group">
+                <label>Sắp xếp</label>
+                @Html.DropDownListFor(m => m.SortOrder,
+                    new SelectList(new[]
+                    {
+                        new SelectListItem { Text = "Tên A - Z", Value = "name_asc" },
+                        new SelectListItem { Text = "Tên Z - A", Value = "name_desc" },
+                        new SelectListItem { Text = "Giá thấp đến cao", Value = "price_asc" },
+                        new SelectListItem { Text = "Giá cao đến thấp", Value = "price_desc" }
+                    }, "Value", "Text", Model.SortOrder),
+                    "Mặc định",
+                    new { @class = "form-control" })
+            </div>
+
+            <div class="filter-actions">
+                <button type="submit" class="btn btn-primary">Tìm kiếm</button>
+                <a href="@Url.Action("Index")" class="btn btn-primary">Làm mới</a>
+            </div>
+        </div>
+    }
+
+    @* Gọi Partial View truyền vào danh sách sản phẩm từ ViewModel *@
+    @Html.Partial("PVListProduct", Model.Products)
+</body>
+</html>

@@ -1,0 +1,45 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - Quản Trị Website</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+</head>
+<body>
+    <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark bg-dark">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" title="More options">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                @Html.ActionLink("My Store", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+            </div>
+            <div class="navbar-collapse collapse">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">@Html.ActionLink("Home", "Index", "Home", new { }, new { @class = "nav-link" })</li>
+                    <li class="nav-item">@Html.ActionLink("Danh Mục", "Index", "Categories", new { }, new { @class = "nav-link" })</li>
+                    <li class="nav-item">@Html.ActionLink("Sản Phẩm", "Index", "Products", new { }, new { @class = "nav-link" })</li>
+                    <li class="nav-item">@Html.ActionLink("Khách Hàng", "Index", "Customers", new { }, new { @class = "nav-link" })</li>
+                    <li class="nav-item">@Html.ActionLink("Đơn Hàng", "Index", "Orders", new { }, new { @class = "nav-link" })</li>
+                    <li class="nav-item">@Html.ActionLink("Tài Khoản", "Index", "Users", new { }, new { @class = "nav-link" })</li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div class="container body-content mt-4">
+        @RenderBody()
+        <hr />
+        <footer>
+            <p>&copy; @DateTime.Now.Year - Book Shop</p>
+            <h4>Contact</h4>
+            <p>Nguyen Hoang Anh</p>
+        </footer>
+    </div>
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
+</body>
+</html>
