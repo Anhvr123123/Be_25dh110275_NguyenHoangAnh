@@ -1,0 +1,180 @@
+﻿
+@{
+    ViewBag.Title = "Đăng ký Admin";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1" />
+    <title>Đăng ký Admin - My Store</title>
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f6f7f9;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .register-box {
+            width: 420px;
+            max-width: 94%;
+            background: white;
+            padding: 30px 25px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px #ddd;
+        }
+
+        h2 {
+            color: #198754;
+            text-align: center;
+            margin-bottom: 12px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #777;
+            margin-bottom: 30px;
+        }
+
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .btn-register {
+            width: 100%;
+            padding: 13px;
+            background: #198754;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .btn-register:hover {
+            background: #146c43;
+        }
+
+        .error {
+            padding: 12px;
+            background: #f8d7da;
+            color: #842029;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+
+        .links {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .links a {
+            display: block;
+            color: #0066ff;
+            text-decoration: none;
+            margin-top: 12px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="register-box">
+        <h2>MY STORE</h2>
+
+        <p class="subtitle">
+            Đăng ký tài khoản quản trị
+        </p>
+
+        @if (ViewBag.Error != null)
+        {
+            <div class="error">
+                @ViewBag.Error
+            </div>
+        }
+
+        @using (Html.BeginForm(
+            "Register", "Account",
+            new { area = "Admin" },
+            FormMethod.Post))
+        {
+            @Html.AntiForgeryToken()
+
+            <label>
+                <i class="fas fa-user"></i>
+                Tên đăng nhập Admin
+            </label>
+
+            <input type="text"
+                   name="Username"
+                   placeholder="Nhập tên đăng nhập..."
+                   required />
+
+            <label>
+                <i class="fas fa-lock"></i>
+                Mật khẩu
+            </label>
+
+            <input type="password"
+                   name="Password"
+                   placeholder="Nhập mật khẩu..."
+                   minlength="8"
+                   required />
+
+            <label>
+                <i class="fas fa-lock"></i>
+                Xác nhận mật khẩu
+            </label>
+
+            <input type="password"
+                   name="ConfirmPassword"
+                   placeholder="Nhập lại mật khẩu..."
+                   minlength="8"
+                   required />
+
+            <button type="submit"
+                    class="btn-register">
+                <i class="fas fa-user-plus"></i>
+                ĐĂNG KÝ ADMIN
+            </button>
+        }
+
+        <div class="links">
+            <a href="@Url.Action("Login", "Account", new { area = "Admin" })">
+                <i class="fas fa-sign-in-alt"></i>
+                Quay lại đăng nhập Admin
+            </a>
+
+            <a href="@Url.Action("Index", "Admin", new { area = "Admin" })">
+                <i class="fas fa-arrow-left"></i>
+                Quay lại trang quản trị
+            </a>
+        </div>
+    </div>
+</body>
+</html>

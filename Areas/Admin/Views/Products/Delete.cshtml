@@ -1,35 +1,231 @@
-﻿@model Be_25dh110275_NguyenHoangAnh.Models.Product
+﻿
+@model Be_25dh110275_NguyenHoangAnh.Models.Product
 
 @{
-    ViewBag.Title = "Delete";
+    ViewBag.Title = "Xóa sản phẩm";
     Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+
+    string image = Model.ProductImage ?? "";
+    string imageUrl = "";
+
+    if (image.StartsWith("http://") || image.StartsWith("https://"))
+    {
+        imageUrl = image;
+    }
+    else if (!string.IsNullOrWhiteSpace(image))
+    {
+        imageUrl = Url.Content("~/Images/products/" + image);
+    }
 }
 
 <style>
-    .page-title-admin {
-        background-color: #1E8A54 !important;
-        color: #000000 !important;
-        padding: 10px 15px;
+    .delete-container {
+        max-width: 1100px;
+        margin: 45px auto;
+    }
+
+    .delete-title {
+        background: #198754;
+        color: white;
+        padding: 20px;
+        border-radius: 6px;
+        font-size: 24px;
         font-weight: bold;
-        font-size: 22px;
-        width: 100%;
+        margin-bottom: 25px;
+    }
+
+    .delete-card {
+        background: white;
+        border: 1px solid #ddd;
+        border-radius: 10px;
+        padding: 25px;
+        box-shadow: 0 4px 12px rgba(0,0,0,.08);
+    }
+
+    .delete-warning {
+        background: #fff3cd;
+        border: 1px solid #ffdf80;
+        color: #856404;
+        padding: 18px;
+        border-radius: 6px;
+        margin-bottom: 25px;
+        font-size: 16px;
+    }
+
+    .product-detail {
+        display: flex;
+        gap: 30px;
+        align-items: flex-start;
+    }
+
+    .product-image {
+        width: 230px;
+        min-width: 230px;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        text-align: center;
+    }
+
+        .product-image img {
+            width: 100%;
+            max-height: 300px;
+            object-fit: contain;
+        }
+
+    .product-info {
+        flex: 1;
+        min-width: 0;
+    }
+
+    .info-label {
+        color: #198754;
+        font-weight: bold;
+        margin-bottom: 10px;
+    }
+
+    .product-name {
+        font-size: 25px;
+        font-weight: bold;
+        margin-bottom: 22px;
+    }
+
+    .product-price {
+        color: #dc3545;
+        font-size: 24px;
+        font-weight: bold;
+        margin-bottom: 25px;
+    }
+
+    .description-box {
+        background: #f8f9fa;
+        padding: 18px;
+        border-radius: 6px;
+        line-height: 1.8;
+        white-space: pre-line;
+        overflow-wrap: anywhere;
+        color: #333;
         margin-bottom: 20px;
-        box-sizing: border-box;
+    }
+
+    .delete-actions {
+        border-top: 1px solid #ddd;
+        margin-top: 25px;
+        padding-top: 20px;
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+    }
+
+        .delete-actions .btn {
+            padding: 12px 22px;
+            font-weight: bold;
+            border-radius: 6px;
+        }
+
+    @@media (max-width: 768px) {
+        .product-detail {
+            flex-direction: column;
+        }
+
+        .product-image {
+            width: 100%;
+            min-width: 0;
+        }
+
+        .delete-container {
+            margin: 20px auto;
+        }
     }
 </style>
 
-<div class="page-title-admin">
-    XÓA SẢN PHẨM
-</div>
+<div class="delete-container">
 
-<h4 class="alert-danger">Bạn thực sự muốn xóa sản phẩm này à?</h4>
-@Html.Partial("PVProdInfo", Model)
+    <div class="delete-title">
+        🗑 XÓA SẢN PHẨM
+    </div>
 
-<div class="form-group mt-3">
-    @using (Html.BeginForm("Delete", "Products", new { id = Model.ProductID }, FormMethod.Post))
-    {
-        @Html.AntiForgeryToken()
-        <input type="submit" value="Xóa" class="btn btn-danger" />
-        @Html.ActionLink("Quay lại danh sách", "Index", null, new { @class = "btn btn-secondary ms-2" })
-    }
+    <div class="delete-card">
+
+        <div class="delete-warning">
+            ⚠ Bạn có chắc chắn muốn xóa sản phẩm này không?
+            Hành động này không thể hoàn tác.
+        </div>
+
+        <div class="product-detail">
+
+            <div class="product-image">
+
+                @if (!string.IsNullOrWhiteSpace(imageUrl))
+                {
+                    <img src="@imageUrl"
+                         alt="@Model.ProductName" />
+                }
+                else
+                {
+                    <p>Chưa có hình ảnh</p>
+                }
+
+            </div>
+
+            <div class="product-info">
+
+                <div class="info-label">
+                    Tên sản phẩm
+                </div>
+
+                <div class="product-name">
+                    @Model.ProductName
+                </div>
+
+                <div class="info-label">
+                    Đơn giá
+                </div>
+
+                <div class="product-price">
+                    @string.Format("{0:N0} đ", Model.ProductPrice)
+                </div>
+
+                <div class="info-label">
+                    Mô tả sản phẩm
+                </div>
+
+                <div class="description-box">
+                    @(string.IsNullOrWhiteSpace(Model.ProductDecription)
+                        ? "Chưa có thông tin mô tả sản phẩm."
+                        : Model.ProductDecription)
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="delete-actions">
+
+            @using (Html.BeginForm(
+                "Delete",
+                "Products",
+                new { area = "Admin", id = Model.ProductID },
+                FormMethod.Post))
+            {
+                @Html.AntiForgeryToken()
+
+                <button type="submit"
+                        class="btn btn-danger"
+                        onclick="return confirm('Bạn chắc chắn muốn xóa sản phẩm này?');">
+                    🗑 Xác nhận xóa
+                </button>
+            }
+
+            @Html.ActionLink(
+                     "← Quay lại danh sách",
+                     "Index",
+                     "Products",
+                     new { area = "Admin" },
+                     new { @class = "btn btn-primary" })
+
+        </div>
+
+    </div>
+
 </div>

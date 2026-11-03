@@ -1,45 +1,350 @@
-﻿<!DOCTYPE html>
-<html>
+﻿
+@{
+    bool isAdmin = Session["UserRole"] != null &&
+                   Session["UserRole"].ToString().Trim() == "A";
+
+    string adminName = Session["Username"] == null
+        ? "Admin"
+        : Session["Username"].ToString();
+}
+
+<!DOCTYPE html>
+<html lang="vi">
 <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewBag.Title - Quản Trị Website</title>
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0" />
+
+    <title>@ViewBag.Title - My Store</title>
+
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
+
+    <style>
+        body {
+            margin: 0;
+            background: white;
+            font-family: Arial, sans-serif;
+        }
+
+        /* THANH MENU */
+        .admin-navbar {
+            background: #f8f9fa;
+            border-bottom: 1px solid #ddd;
+            padding: 15px 20px;
+        }
+
+        .admin-nav-inner {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+        }
+
+        /* LOGO */
+        .admin-logo {
+            font-size: 25px;
+            font-weight: bold;
+            color: #198754;
+            text-decoration: none;
+            white-space: nowrap;
+        }
+
+            .admin-logo:hover {
+                color: #146c43;
+                text-decoration: none;
+            }
+
+        /* DANH SÁCH MENU */
+        .admin-nav-links {
+            display: flex;
+            align-items: center;
+            gap: 22px;
+            flex-wrap: wrap;
+        }
+
+            .admin-nav-links > a {
+                color: #222;
+                text-decoration: none;
+                font-size: 14px;
+                white-space: nowrap;
+            }
+
+                .admin-nav-links > a:hover {
+                    color: #198754;
+                    text-decoration: none;
+                }
+
+        /* TÀI KHOẢN ADMIN */
+        .admin-account {
+            position: relative;
+            display: inline-block;
+        }
+
+        .admin-account-name {
+            color: #198754;
+            font-weight: bold;
+            cursor: pointer;
+            padding: 12px 5px;
+            display: inline-block;
+            text-decoration: none;
+            white-space: nowrap;
+        }
+
+            .admin-account-name:hover {
+                color: #146c43;
+                text-decoration: none;
+            }
+
+        /* MENU XỔ XUỐNG */
+        .admin-dropdown {
+            display: none;
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: white;
+            min-width: 230px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0,0,0,.15);
+            z-index: 9999;
+            overflow: hidden;
+        }
+
+        .admin-account:hover .admin-dropdown,
+        .admin-account:focus-within .admin-dropdown {
+            display: block;
+        }
+
+        .admin-dropdown a {
+            display: block;
+            padding: 14px 16px;
+            text-decoration: none;
+            color: #333;
+            font-size: 14px;
+        }
+
+            .admin-dropdown a:hover {
+                background: #e9f7ef;
+                color: #198754;
+                text-decoration: none;
+            }
+
+        /* ĐĂNG XUẤT */
+        .admin-dropdown .logout-link {
+            color: #dc3545;
+            border-top: 1px solid #eee;
+        }
+
+            .admin-dropdown .logout-link:hover {
+                background: #f8d7da;
+                color: #dc3545;
+            }
+
+        /* ĐĂNG NHẬP */
+        .admin-login-link {
+            color: #dc3545 !important;
+            font-weight: bold;
+        }
+
+        /* NỘI DUNG */
+        .admin-main {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 45px 20px 65px;
+            box-sizing: border-box;
+            min-height: 550px;
+        }
+
+        /* FOOTER */
+        .admin-footer {
+            text-align: center;
+            border-top: 1px solid #ddd;
+            padding: 25px 15px;
+            color: #333;
+        }
+
+            .admin-footer p {
+                margin-bottom: 15px;
+            }
+
+        /* RESPONSIVE */
+        @@media (max-width: 768px) {
+            .admin-nav-inner {
+                flex-direction: column;
+            }
+
+            .admin-nav-links {
+                justify-content: center;
+                gap: 12px;
+            }
+
+            .admin-main {
+                padding: 25px 12px;
+            }
+
+            .admin-dropdown {
+                right: 0;
+            }
+        }
+        /* NÚT XEM GIAO DIỆN KHÁCH HÀNG */
+        .admin-dropdown .customer-view-link {
+            color: #198754;
+            font-weight: 600;
+            border-top: 1px solid #eee;
+        }
+
+            .admin-dropdown .customer-view-link:hover {
+                background-color: #e9f7ef;
+                color: #146c43;
+            }
+    </style>
 </head>
+
 <body>
-    <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark bg-dark">
-        <div class="container">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" title="More options">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                @Html.ActionLink("My Store", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
-            </div>
-            <div class="navbar-collapse collapse">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">@Html.ActionLink("Home", "Index", "Home", new { area = "Admin" }, new { @class = "nav-link" })</li>
-                    <li class="nav-item">@Html.ActionLink("Danh Mục", "Index", "Categories", new { area = "Admin" }, new { @class = "nav-link" })</li>
-                    <li class="nav-item">@Html.ActionLink("Sản Phẩm", "Index", "Products", new { area = "Admin" }, new { @class = "nav-link" })</li>
-                    <li class="nav-item">@Html.ActionLink("Khách Hàng", "Index", "Customers", new { area = "Admin" }, new { @class = "nav-link" })</li>
-                    <li class="nav-item">@Html.ActionLink("Đơn Hàng", "Index", "Orders", new { area = "Admin" }, new { @class = "nav-link" })</li>
-                    <li class="nav-item">@Html.ActionLink("Tài Khoản", "Index", "Users", new { area = "Admin" }, new { @class = "nav-link" })</li>
-                </ul>
+
+    <!-- THANH MENU -->
+    <nav class="admin-navbar">
+        <div class="admin-nav-inner">
+
+            <!-- LOGO -->
+            <a class="admin-logo"
+               href="@Url.Action("Index", "Home",
+                     new { area = "Admin" })">
+                My Store
+            </a>
+
+            <!-- MENU -->
+            <div class="admin-nav-links">
+
+                <a href="@Url.Action("Index", "Home",
+                     new { area = "Admin" })">
+                    🏠 Trang chủ
+                </a>
+
+                <a href="@Url.Action("Index", "Categories",
+                     new { area = "Admin" })">
+                    ☷ Danh mục
+                </a>
+
+                <a href="@Url.Action("Index", "Products",
+                     new { area = "Admin" })">
+                    ▣ Sản phẩm
+                </a>
+
+                <a href="@Url.Action("Index", "Orders",
+                     new { area = "Admin" })">
+                    ▣ Đơn hàng
+                </a>
+
+                <a href="@Url.Action("Index", "Customers",
+                     new { area = "Admin" })">
+                    ♟ Khách hàng
+                </a>
+
+                <!-- KIỂM TRA ĐĂNG NHẬP -->
+                @if (isAdmin)
+                {
+                    <div class="admin-account">
+
+                        <!-- TÊN ADMIN -->
+                        <a class="admin-account-name"
+                           href="@Url.Action("Index",
+                                 "AdminProfile",
+                                 new { area = "Admin" })">
+
+                            👤 @adminName ▾
+
+                        </a>
+
+
+                        <div class="admin-dropdown">
+
+                            <!-- THÔNG TIN TÀI KHOẢN -->
+                            <a href="@Url.Action("Index",
+              "AdminProfile",
+              new { area = "Admin" })">
+
+                                👤 Thông tin tài khoản
+
+                            </a>
+
+                            <!-- CHỈNH SỬA THÔNG TIN -->
+                            <a href="@Url.Action("Edit",
+              "AdminProfile",
+              new { area = "Admin" })">
+
+                                ✎ Chỉnh sửa thông tin
+
+                            </a>
+
+                            <!-- XEM GIAO DIỆN KHÁCH HÀNG -->
+                            <a href="@Url.Action("Index",
+              "Home",
+              new { area = "" })"
+                               target="_blank"
+                               rel="noopener noreferrer"
+                               class="customer-view-link">
+
+                                👁 Xem giao diện khách hàng
+
+                            </a>
+
+                            <!-- ĐĂNG XUẤT -->
+                            <a class="logout-link"
+                               href="@Url.Action("Logout",
+             "Account",
+             new { area = "Admin" })">
+
+                                ↪ Đăng xuất
+
+                            </a>
+
+                        </div>
+
+                    </div>
+                }
+                else
+                {
+                    <!-- CHƯA ĐĂNG NHẬP -->
+                    <a class="admin-login-link"
+                       href="@Url.Action("Login",
+                             "Account",
+                             new { area = "Admin" })">
+
+                        ↪ Đăng nhập
+
+                    </a>
+                }
+
             </div>
         </div>
     </nav>
-    <div class="container body-content mt-4">
+
+    <!-- NỘI DUNG TRANG -->
+    <main class="admin-main">
         @RenderBody()
-        <hr />
-        <footer>
-            <p>&copy; @DateTime.Now.Year - Book Shop</p>
-            <h4>Contact</h4>
-            <p>Nguyen Hoang Anh</p>
-        </footer>
-    </div>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="admin-footer">
+
+        <p>
+            © @DateTime.Now.Year - My Store E-commerce
+        </p>
+
+        <p>
+            Contact: Nguyễn Hoàng Anh
+        </p>
+
+    </footer>
 
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
+
     @RenderSection("scripts", required: false)
+
 </body>
 </html>

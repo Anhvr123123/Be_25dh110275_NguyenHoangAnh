@@ -1,0 +1,140 @@
+﻿
+@model Be_25dh110275_NguyenHoangAnh.Models.User
+
+@{
+    ViewBag.Title = "Thông tin tài khoản Admin";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<style>
+    .profile-container {
+        max-width: 700px;
+        margin: 70px auto 95px;
+    }
+
+    .profile-card {
+        background: white;
+        border: 1px solid #ddd;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 4px 12px rgba(0,0,0,.09);
+    }
+
+    .profile-header {
+        background: #198754;
+        color: white;
+        padding: 22px;
+        font-size: 24px;
+        font-weight: bold;
+    }
+
+    .profile-body {
+        padding: 30px;
+    }
+
+    .profile-avatar {
+        text-align: center;
+        color: #56328a;
+        font-size: 75px;
+        margin: 15px 0 35px;
+    }
+
+    .profile-row {
+        padding: 17px 0;
+        border-bottom: 1px solid #eee;
+        font-size: 16px;
+    }
+
+        .profile-row strong {
+            color: #198754;
+        }
+
+    .profile-actions {
+        display: flex;
+        gap: 12px;
+        margin-top: 25px;
+        flex-wrap: wrap;
+    }
+
+    .profile-btn {
+        display: inline-block;
+        padding: 12px 20px;
+        border-radius: 6px;
+        color: white !important;
+        text-decoration: none !important;
+        font-weight: bold;
+    }
+
+    .profile-btn-edit {
+        background: #0d6efd;
+    }
+
+    .profile-btn-home {
+        background: #198754;
+    }
+
+    .profile-success {
+        background: #d1e7dd;
+        color: #0f5132;
+        padding: 14px;
+        border-radius: 6px;
+        margin-bottom: 20px;
+    }
+</style>
+
+<div class="profile-container">
+    <div class="profile-card">
+
+        <div class="profile-header">
+            THÔNG TIN TÀI KHOẢN ADMIN
+        </div>
+
+        <div class="profile-body">
+
+            @if (TempData["Success"] != null)
+            {
+                <div class="profile-success">
+                    @TempData["Success"]
+                </div>
+            }
+
+            <div class="profile-avatar">
+                <span class="glyphicon glyphicon-user"></span>
+            </div>
+
+            <div class="profile-row">
+                <strong>Tên đăng nhập:</strong>
+                @Model.Username
+            </div>
+
+            <div class="profile-row">
+                <strong>Quyền tài khoản:</strong>
+                Quản trị viên (Admin)
+            </div>
+
+            <div class="profile-row">
+                <strong>Trạng thái:</strong>
+                <span style="color:#198754;">
+                    Đang đăng nhập
+                </span>
+            </div>
+
+            <div class="profile-actions">
+
+                <a href="@Url.Action("Edit", "AdminProfile",
+                    new { area = "Admin" })"
+                   class="profile-btn profile-btn-edit">
+                    ✎ Chỉnh sửa thông tin
+                </a>
+
+                <a href="@Url.Action("Index", "Home",
+                    new { area = "Admin" })"
+                   class="profile-btn profile-btn-home">
+                    ← Quay lại trang chủ
+                </a>
+
+            </div>
+
+        </div>
+    </div>
+</div>

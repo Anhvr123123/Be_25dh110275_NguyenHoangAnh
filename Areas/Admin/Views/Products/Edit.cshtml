@@ -1,39 +1,61 @@
-﻿@model Be_25dh110275_NguyenHoangAnh.Models.Product
+﻿
+@model Be_25dh110275_NguyenHoangAnh.Models.Product
 
 @{
-    ViewBag.Title = "Edit";
+    ViewBag.Title = "Cập nhật sản phẩm";
     Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
 }
 
-<style>
-    .page-title-admin {
-        background-color: #1E8A54 !important;
-        color: #000000 !important;
-        padding: 10px 15px;
-        font-weight: bold;
-        font-size: 22px;
-        width: 100%;
-        margin-bottom: 20px;
-        box-sizing: border-box;
-    }
-</style>
+<link href="@Url.Content("~/Content/myStyle/AdminProductForm.css")"
+      rel="stylesheet" />
 
-<div class="page-title-admin">
-    CẬP NHẬT SẢN PHẨM
-</div>
+<div class="product-form-container">
 
-@using (Html.BeginForm("Edit", "Products", FormMethod.Post, new { enctype = "multipart/form-data" }))
-{
-    @Html.AntiForgeryToken()
-
-    <div class="form-horizontal">
-        <hr />
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        @Html.HiddenFor(model => model.ProductID)
-        @Html.HiddenFor(model => model.ProductImage)
-        @Html.Partial("PVCreateEditProduct", Model)
+    <div class="product-form-title">
+        <i class="fas fa-edit"></i>
+        CẬP NHẬT SẢN PHẨM
     </div>
-}
+
+    <div class="product-form-card">
+
+        @using (Html.BeginForm(
+            "Edit",
+            "Products",
+            new { area = "Admin" },
+            FormMethod.Post,
+            new { enctype = "multipart/form-data" }))
+        {
+            @Html.AntiForgeryToken()
+
+            @Html.ValidationSummary(
+                     true, "",
+                     new { @class = "text-danger" })
+
+            @Html.HiddenFor(m => m.ProductID)
+            @Html.HiddenFor(m => m.ProductImage)
+
+            @Html.Partial("PVCreateEditProduct", Model)
+
+            <div class="product-form-actions">
+
+                <button type="submit"
+                        class="product-btn-save">
+                    <i class="fas fa-save"></i>
+                    LƯU THAY ĐỔI
+                </button>
+
+                <a href="@Url.Action("Index", "Products",
+                    new { area = "Admin" })"
+                   class="product-btn-back">
+                    <i class="fas fa-arrow-left"></i>
+                    Quay lại danh sách
+                </a>
+
+            </div>
+        }
+
+    </div>
+</div>
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")

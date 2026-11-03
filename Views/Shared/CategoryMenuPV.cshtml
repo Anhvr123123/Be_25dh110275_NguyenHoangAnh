@@ -5,9 +5,16 @@
         Danh mục sản phẩm
     </a>
     <div class="dropdown-menu" aria-labelledby="navbarDropdownCategory">
-        @foreach (var item in Model)
+        @if (Model != null && Model.Any())
         {
-            <a class="dropdown-item" href="@Url.Action("ProductList", "Home", new { categoryID = item.CategoryID })">@item.CategoryName</a>
+            foreach (var item in Model)
+            {
+                <a class="dropdown-item" href="@Url.Action("ProductList", "Home", new { categoryId = item.CategoryID })">@item.CategoryName</a>
+            }
+        }
+        else
+        {
+            <a class="dropdown-item" href="#">Không có danh mục</a>
         }
     </div>
 </li>

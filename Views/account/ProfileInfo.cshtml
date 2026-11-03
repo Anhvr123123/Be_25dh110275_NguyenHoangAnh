@@ -1,0 +1,267 @@
+﻿
+@model Be_25dh110275_NguyenHoangAnh.Models.Customer
+
+@{
+    ViewBag.Title = "Thông tin tài khoản";
+    Layout = "~/Views/Shared/_CustomerLayout.cshtml";
+}
+
+<style>
+    .profile-container {
+        max-width: 720px;
+        margin: 35px auto 70px;
+        padding: 30px;
+        background: #ffffff;
+        border: 1px solid #e5e7eb;
+        border-radius: 15px;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.06);
+    }
+
+    .profile-title {
+        color: #087e42;
+        font-size: 27px;
+        font-weight: 700;
+        margin-bottom: 10px;
+    }
+
+    .profile-description {
+        color: #6b7280;
+        margin-bottom: 25px;
+    }
+
+    .profile-group {
+        margin-bottom: 20px;
+    }
+
+        .profile-group label {
+            display: block;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 8px;
+        }
+
+    .profile-input {
+        display: block;
+        width: 100%;
+        padding: 12px 15px;
+        border: 1px solid #d1d5db;
+        border-radius: 8px;
+        font-size: 15px;
+        box-sizing: border-box;
+        background: #ffffff;
+    }
+
+        .profile-input:focus {
+            border-color: #087e42;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(8, 126, 66, 0.12);
+        }
+
+        .profile-input[readonly] {
+            background: #f3f4f6;
+            color: #6b7280;
+            cursor: not-allowed;
+        }
+
+    .profile-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-top: 25px;
+    }
+
+    .profile-btn {
+        display: inline-block;
+        padding: 12px 22px;
+        border-radius: 8px;
+        font-size: 15px;
+        font-weight: 600;
+        text-decoration: none;
+        cursor: pointer;
+        transition: 0.2s;
+    }
+
+    .profile-btn-save {
+        background: #087e42;
+        color: #ffffff;
+        border: 1px solid #087e42;
+    }
+
+        .profile-btn-save:hover {
+            background: #056633;
+            color: #ffffff;
+        }
+
+    .profile-btn-password {
+        background: #ffffff;
+        color: #087e42;
+        border: 1px solid #087e42;
+    }
+
+        .profile-btn-password:hover {
+            background: #e8f5ed;
+            color: #087e42;
+            text-decoration: none;
+        }
+
+    .profile-btn-home {
+        background: #f3f4f6;
+        color: #374151;
+        border: 1px solid #d1d5db;
+    }
+
+        .profile-btn-home:hover {
+            background: #e5e7eb;
+            text-decoration: none;
+        }
+
+    @@media (max-width: 600px) {
+        .profile-container {
+            padding: 20px 15px;
+            margin: 20px auto 40px;
+        }
+
+        .profile-title {
+            font-size: 22px;
+        }
+
+        .profile-actions {
+            flex-direction: column;
+        }
+
+        .profile-btn {
+            width: 100%;
+            text-align: center;
+        }
+    }
+</style>
+
+<div class="profile-container">
+
+    <h2 class="profile-title">
+        👤 THÔNG TIN TÀI KHOẢN
+    </h2>
+
+    <p class="profile-description">
+        Quản lý và cập nhật thông tin cá nhân của bạn.
+    </p>
+
+    <hr />
+
+    @* THÔNG BÁO THÀNH CÔNG *@
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success">
+            ✔ @TempData["Success"]
+        </div>
+    }
+
+    @* THÔNG BÁO LỖI *@
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger">
+            @TempData["Error"]
+        </div>
+    }
+
+    @* FORM CẬP NHẬT TÀI KHOẢN *@
+    @using (Html.BeginForm(
+        "UpdateProfile",
+        "Account",
+        new { area = "" },
+        FormMethod.Post,
+        new { id = "profileForm" }))
+    {
+        @Html.AntiForgeryToken()
+
+        @* TÊN ĐĂNG NHẬP *@
+        <div class="profile-group">
+            <label for="Username">
+                Tên đăng nhập
+            </label>
+
+            <input type="text"
+                   id="Username"
+                   class="profile-input"
+                   value="@Model.Username"
+                   readonly />
+        </div>
+
+        @* HỌ VÀ TÊN *@
+        <div class="profile-group">
+            <label for="CustomerName">
+                Họ và tên
+            </label>
+
+            <input type="text"
+                   id="CustomerName"
+                   class="profile-input"
+                   value="@Model.CustomerName"
+                   readonly />
+        </div>
+
+        @* SỐ ĐIỆN THOẠI *@
+        <div class="profile-group">
+            <label for="CustomerPhone">
+                Số điện thoại
+            </label>
+
+            <input type="tel"
+                   id="CustomerPhone"
+                   name="CustomerPhone"
+                   class="profile-input"
+                   value="@Model.CustomerPhone"
+                   maxlength="15"
+                   placeholder="Nhập số điện thoại"
+                   required />
+        </div>
+
+        @* EMAIL *@
+        <div class="profile-group">
+            <label for="CustomerEmail">
+                Địa chỉ Email
+            </label>
+
+            <input type="email"
+                   id="CustomerEmail"
+                   name="CustomerEmail"
+                   class="profile-input"
+                   value="@Model.CustomerEmail"
+                   placeholder="Nhập địa chỉ email" />
+        </div>
+
+        @* ĐỊA CHỈ *@
+        <div class="profile-group">
+            <label for="CustomerAddress">
+                Địa chỉ giao hàng
+            </label>
+
+            <textarea id="CustomerAddress"
+                      name="CustomerAddress"
+                      class="profile-input"
+                      rows="3"
+                      placeholder="Nhập địa chỉ giao hàng">@Model.CustomerAddress</textarea>
+        </div>
+
+        @* CÁC NÚT CHỨC NĂNG *@
+        <div class="profile-actions">
+
+            <button type="submit"
+                    class="profile-btn profile-btn-save">
+                💾 Lưu thay đổi
+            </button>
+
+            <a href="@Url.Action("ChangePassword", "Account", new { area = "" })"
+               class="profile-btn profile-btn-password">
+                🔒 Đổi mật khẩu
+            </a>
+
+            <a href="@Url.Action("Index", "Home", new { area = "" })"
+               class="profile-btn profile-btn-home">
+                ← Trang chủ
+            </a>
+
+        </div>
+    }
+
+</div>

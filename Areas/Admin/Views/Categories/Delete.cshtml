@@ -1,58 +1,129 @@
-﻿@model Be_25dh110275_NguyenHoangAnh.Models.Category
+﻿
+@model Be_25dh110275_NguyenHoangAnh.Models.Category
 
 @{
-    ViewBag.Title = "Delete";
+    ViewBag.Title = "Xóa danh mục";
     Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
 }
 
 <style>
-    .search-container, .order-container {
-        padding-top: 20px;
+    .delete-container {
+        max-width: 650px;
+        margin: 50px auto;
+        font-family: Arial, sans-serif;
+    }
+
+    .delete-card {
+        background: white;
+        border: 1px solid #e0e0e0;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+    }
+
+    .delete-header {
+        background: #218b58;
+        padding: 20px;
+        color: white;
+        font-size: 22px;
+        font-weight: bold;
+        text-align: center;
+    }
+
+    .delete-body {
+        padding: 30px;
+    }
+
+    .delete-warning {
+        background: #fff3cd;
+        border-left: 5px solid #ffc107;
+        border-radius: 5px;
+        padding: 18px;
+        color: #856404;
+        margin-bottom: 25px;
+    }
+
+    .delete-info {
+        background: #f8f9fa;
+        padding: 20px;
+        border-radius: 8px;
+        margin-bottom: 25px;
+    }
+
+        .delete-info label {
+            font-weight: bold;
+            color: #555;
+        }
+
+        .delete-info h3 {
+            color: #218b58;
+            font-size: 22px;
+            margin: 10px 0 0;
+        }
+
+    .delete-actions {
         display: flex;
         justify-content: center;
-        align-items: center;
+        gap: 15px;
+        flex-wrap: wrap;
     }
 
-    img {
-        width: 100px;
-        max-height: 100px;
-    }
-    .page-title-admin {
-        background-color: #1E8A54 !important;
-        color: #000000 !important;
-        padding: 10px 15px;
-        font-weight: bold;
-        font-size: 22px;
-        width: 100%;
-        margin-bottom: 20px;
-        box-sizing: border-box;
-    }
+        .delete-actions .btn {
+            padding: 11px 22px;
+            border-radius: 6px;
+            font-weight: bold;
+        }
 </style>
-<div class="page-title-admin">
-    XÓA DANH MỤC
-</div>
-<h4 class="alert-danger" style="padding: 10px; border-radius: 4px;">Bạn thực sự muốn xóa danh mục này chứ?</h4>
 
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
+<div class="delete-container">
+    <div class="delete-card">
 
-    <div class="form-horizontal">
-        <hr />
-
-        <div class="form-group">
-           
-            <div style="font-weight: bold; text-align: left;">Tên danh mục</div>
-            <div class="col-md-10">
-                <p class="form-control-static">@Html.DisplayFor(model => model.CategoryName)</p>
-            </div>
+        <div class="delete-header">
+            <i class="fas fa-trash-alt"></i>
+            XÓA DANH MỤC
         </div>
 
-        <div class="form-group" style="margin-top: 15px;">
-            <div class="col-md-offset-0 col-md-10">
-                <input type="submit" value="Xóa" class="btn btn-danger" />
-                @Html.ActionLink("Quay lại danh sách", "Index", null, new { @class = "btn btn-primary btn-sm" })
+        <div class="delete-body">
+
+            <div class="delete-warning">
+                <i class="fas fa-exclamation-triangle"></i>
+                <strong>Cảnh báo!</strong>
+                <p style="margin:10px 0 0;">
+                    Bạn có chắc chắn muốn xóa danh mục này?
+                    Hành động này không thể hoàn tác.
+                </p>
             </div>
+
+            <div class="delete-info">
+                <label>Tên danh mục:</label>
+                <h3>@Html.DisplayFor(model => model.CategoryName)</h3>
+            </div>
+
+            @using (Html.BeginForm("Delete", "Categories",
+                new { area = "Admin" }, FormMethod.Post,
+                new { id = "deleteForm" }))
+            {
+                @Html.AntiForgeryToken()
+                @Html.HiddenFor(model => model.CategoryID)
+
+                <div class="delete-actions">
+
+                    <button type="submit"
+                            class="btn btn-danger"
+                            onclick="return confirm('Bạn chắc chắn muốn xóa danh mục này?');">
+                        <i class="fas fa-trash"></i>
+                        Xác nhận xóa
+                    </button>
+
+                    <a href="@Url.Action("Index", "Categories", new { area = "Admin" })"
+                       class="btn btn-secondary">
+                        <i class="fas fa-arrow-left"></i>
+                        Quay lại danh sách
+                    </a>
+
+                </div>
+            }
+
         </div>
     </div>
-}
+</div>

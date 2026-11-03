@@ -1,0 +1,86 @@
+﻿
+@model Be_25dh110275_NguyenHoangAnh.Models.User
+
+@{
+    ViewBag.Title = "Thông tin tài khoản";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<style>
+    .profile-container {
+        max-width: 700px;
+        margin: 30px auto;
+    }
+
+    .profile-header {
+        background: #198754;
+        color: white;
+        padding: 20px;
+        border-radius: 8px 8px 0 0;
+        font-size: 23px;
+        font-weight: bold;
+    }
+
+    .profile-body {
+        border: 1px solid #ddd;
+        padding: 30px;
+        border-radius: 0 0 8px 8px;
+        box-shadow: 0 4px 12px rgba(0,0,0,.08);
+    }
+
+    .profile-avatar {
+        text-align: center;
+        font-size: 65px;
+        margin-bottom: 20px;
+    }
+
+    .profile-row {
+        padding: 15px 0;
+        border-bottom: 1px solid #eee;
+    }
+
+        .profile-row strong {
+            color: #198754;
+        }
+</style>
+
+<div class="profile-container">
+
+    <div class="profile-header">
+        THÔNG TIN TÀI KHOẢN ADMIN
+    </div>
+
+    <div class="profile-body">
+
+        <div class="profile-avatar">
+            👤
+        </div>
+
+        <div class="profile-row">
+            <strong>Tên đăng nhập:</strong>
+            @Model.Username
+        </div>
+
+        <div class="profile-row">
+            <strong>Quyền tài khoản:</strong>
+            Quản trị viên (Admin)
+        </div>
+
+        <div class="profile-row">
+            <strong>Trạng thái:</strong>
+            <span style="color:#198754;">
+                Đang đăng nhập
+            </span>
+        </div>
+
+        <div style="margin-top:25px;">
+            @Html.ActionLink(
+                     "← Quay lại trang chủ",
+                     "Index",
+                     "Home",
+                     new { area = "Admin" },
+                     new { @class = "btn btn-success" })
+        </div>
+
+    </div>
+</div>

@@ -1,0 +1,65 @@
+﻿@model Be_25dh110275_NguyenHoangAnh.Models.Order
+
+@{
+    ViewBag.Title = "Chi tiết đơn hàng #" + Model.OrderID;
+    Layout = "~/Views/Shared/_CustomerLayout.cshtml";
+}
+
+<div class="container my-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2><i class="fa fa-file-text-o me-2"></i>Chi Tiết Đơn Hàng #@Model.OrderID</h2>
+        <a href="@Url.Action("OrderHistory", "Order")" class="btn btn-outline-secondary">
+            <i class="fa fa-arrow-left me-1"></i> Quay lại lịch sử
+        </a>
+    </div>
+
+    <div class="row">
+        <!-- Thông tin chung -->
+        <div class="col-md-4 mb-3">
+            <div class="card shadow-sm p-4 h-100 bg-light">
+                <h4 class="mb-3 text-primary fw-bold">Thông tin đơn hàng</h4>
+                <p><strong>Ngày đặt:</strong> @Model.OrderDate.ToString("dd/MM/yyyy HH:mm")</p>                <p><strong>Địa chỉ nhận:</strong> @Model.ShippingAddress</p>
+                <p><strong>Trạng thái:</strong> <span class="badge bg-info text-dark">@Model.PaymentStatus</span></p>
+                <hr />
+                <h5 class="text-danger fw-bold">Tổng tiền: @string.Format("{0:N0} đ", Model.TotalAmount)</h5>
+            </div>
+        </div>
+
+        <!-- Danh sách sản phẩm trong đơn -->
+        <div class="col-md-8 mb-3">
+            <div class="card shadow-sm p-4 h-100">
+                <h4 class="mb-3 fw-bold">Sản phẩm đã mua</h4>
+                <div class="table-responsive">
+                    <table class="table table-bordered align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Ảnh</th>
+                                <th>Tên sản phẩm</th>
+                                <th>Giá</th>
+                                <th>Số lượng</th>
+                                <th>Thành tiền</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var detail in Model.OrderDetails)
+                            {
+                                <tr>
+                                    <td class="text-center">
+                                        <img src="@(detail.Product != null ? detail.Product.ProductImage : "")"
+                                             style="width: 50px; height: 50px; object-fit: contain;"
+                                             class="rounded bg-light border p-1"
+                                             onerror="this.onerror=null;this.src='https://via.placeholder.com/50';" />
+                                    </td>
+                                    <td class="fw-semibold">@(detail.Product != null ? detail.Product.ProductName : "Sản phẩm không tồn tại")</td>
+                                    <td class="text-danger">@string.Format("{0:N0} đ", detail.UnitPrice)</td>
+                                    <td class="text-center">@detail.Quantity</td>
+                                    <td class="text-danger fw-bold">@string.Format("{0:N0} đ", detail.Quantity * detail.UnitPrice)</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

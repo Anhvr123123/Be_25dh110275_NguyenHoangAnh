@@ -1,86 +1,506 @@
-﻿@model Be_25dh110275_NguyenHoangAnh.Models.ViewModel.HomeProductVM
-@using PagedList.Mvc;
+﻿
+@using System
+@using System.Linq
+@using System.Collections.Generic
+@using Be_25dh110275_NguyenHoangAnh.Models
 
 @{
-    ViewBag.Title = "Trang Chủ - MyStore";
-    Layout = "~/Views/Shared/_CustomerLayout.cshtml";}
+    ViewBag.Title = "Trang chủ ThegioiBook";
+    Layout = "~/Views/Shared/_CustomerLayout.cshtml";
 
-<div class="container mt-4">
-    <!-- Thanh tìm kiếm sản phẩm -->
-    <div class="row mb-4">
-        <div class="col-md-6 offset-md-3">
-            @using (Html.BeginForm("Index", "Home", FormMethod.Get))
+    var products = ViewBag.FeaturedProducts as IEnumerable<Product>;
+
+    if (products == null)
+    {
+        products = Enumerable.Empty<Product>();
+    }
+
+    string searchTerm = Convert.ToString(ViewBag.SearchTerm);
+}
+
+<style>
+    /* BANNER TRANG CHỦ */
+    .tb-hero {
+        display: grid;
+        grid-template-columns: 1.1fr 1fr;
+        align-items: center;
+        gap: 35px;
+        padding: 45px;
+        background: linear-gradient(120deg, #e7f7ed, #f4fbf6);
+        border-radius: 20px;
+        overflow: hidden;
+    }
+
+    .tb-hero-left {
+        min-width: 0;
+    }
+
+    .tb-welcome {
+        display: inline-block;
+        padding: 9px 16px;
+        background: #d2f3df;
+        color: #087e42;
+        border-radius: 30px;
+        font-weight: 700;
+        margin-bottom: 20px;
+    }
+
+    .tb-hero h1 {
+        font-size: 42px;
+        line-height: 1.3;
+        color: #087e42;
+        font-weight: 800;
+        margin: 0 0 20px;
+    }
+
+        .tb-hero h1 span {
+            display: block;
+            color: #16a34a;
+        }
+
+    .tb-hero-left > p {
+        font-size: 16px;
+        line-height: 1.8;
+        color: #475569;
+        margin-bottom: 25px;
+    }
+
+    /* TÌM KIẾM */
+    .tb-hero .tb-search {
+        display: flex;
+        width: 100%;
+        max-width: 520px;
+        margin-bottom: 24px;
+        overflow: hidden;
+        border-radius: 12px;
+        box-shadow: 0 5px 18px rgba(0,0,0,.08);
+    }
+
+        .tb-hero .tb-search input {
+            flex: 1;
+            min-width: 0;
+            height: 54px;
+            padding: 0 18px;
+            border: 1px solid #d1d5db;
+            outline: none;
+            background: white;
+            font-size: 14px;
+        }
+
+        .tb-hero .tb-search button {
+            flex-shrink: 0;
+            padding: 0 22px;
+            border: none;
+            background: #087e42;
+            color: white;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+            .tb-hero .tb-search button:hover {
+                background: #066b38;
+            }
+
+    .tb-benefits {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px 20px;
+        color: #087e42;
+        font-size: 13px;
+        font-weight: 600;
+    }
+
+    /* ẢNH BANNER */
+    .tb-hero-right {
+        min-width: 0;
+        width: 100%;
+    }
+
+        .tb-hero-right img {
+            display: block;
+            width: 100%;
+            height: 340px;
+            object-fit: cover;
+            border-radius: 16px;
+            box-shadow: 0 12px 25px rgba(0,0,0,.12);
+        }
+
+    /* SẢN PHẨM NỔI BẬT */
+    .tb-products-section {
+        margin-top: 42px;
+    }
+
+        .tb-products-section .tb-section-title {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+            .tb-products-section .tb-section-title h2 {
+                margin: 0;
+                color: #087e42;
+                font-size: 28px;
+                font-weight: 800;
+            }
+
+            .tb-products-section .tb-section-title a {
+                color: #087e42;
+                font-weight: 700;
+                text-decoration: none;
+                white-space: nowrap;
+            }
+
+        /* GRID SẢN PHẨM */
+        .tb-products-section .tb-product-grid {
+            display: grid !important;
+            grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+            gap: 22px !important;
+            align-items: stretch;
+        }
+
+        /* CARD SẢN PHẨM */
+        .tb-products-section .tb-product-card {
+            display: flex !important;
+            flex-direction: column !important;
+            min-width: 0;
+            height: 100%;
+            background: #fff !important;
+            border: 1px solid #e5e7eb !important;
+            border-radius: 14px !important;
+            overflow: hidden !important;
+            box-shadow: 0 4px 15px rgba(0,0,0,.06);
+            transition: transform .2s, box-shadow .2s;
+        }
+
+            .tb-products-section .tb-product-card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 12px 25px rgba(0,0,0,.12);
+            }
+
+        /* KHUNG ẢNH */
+        .tb-products-section .tb-product-image {
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            width: 100% !important;
+            height: 245px !important;
+            padding: 15px !important;
+            margin: 0 !important;
+            background: #fff !important;
+            overflow: hidden !important;
+            flex-shrink: 0;
+        }
+
+            .tb-products-section .tb-product-image img {
+                display: block !important;
+                width: 100% !important;
+                height: 100% !important;
+                max-width: 100% !important;
+                max-height: 100% !important;
+                object-fit: contain !important;
+                object-position: center !important;
+                border-radius: 0 !important;
+                box-shadow: none !important;
+            }
+
+        /* THÔNG TIN SẢN PHẨM */
+        .tb-products-section .tb-product-body {
+            display: flex !important;
+            flex-direction: column !important;
+            flex: 1;
+            gap: 12px;
+            padding: 18px !important;
+            background: #fff !important;
+            position: static !important;
+        }
+
+            .tb-products-section .tb-product-body h3 {
+                margin: 0 !important;
+                color: #1f2937 !important;
+                font-size: 16px !important;
+                line-height: 1.5 !important;
+                font-weight: 700 !important;
+                min-height: 48px;
+                overflow: hidden;
+                display: -webkit-box;
+                -webkit-line-clamp: 2;
+                -webkit-box-orient: vertical;
+            }
+
+        .tb-products-section .tb-product-price {
+            margin: auto 0 0 !important;
+            color: #e11d48 !important;
+            font-size: 19px !important;
+            font-weight: 800 !important;
+        }
+
+        /* NÚT CHI TIẾT */
+        .tb-products-section .tb-detail-button {
+            display: block !important;
+            width: 100%;
+            padding: 12px 15px !important;
+            background: #087e42 !important;
+            color: white !important;
+            border-radius: 8px !important;
+            text-align: center;
+            font-size: 14px;
+            font-weight: 700;
+            text-decoration: none !important;
+        }
+
+            .tb-products-section .tb-detail-button:hover {
+                background: #066b38 !important;
+                color: white !important;
+            }
+
+        .tb-products-section .tb-empty {
+            padding: 35px 20px;
+            text-align: center;
+            background: #f8faf9;
+            border-radius: 12px;
+            color: #64748b;
+        }
+
+    /* RESPONSIVE */
+    @@media (max-width: 1100px) {
+        .tb-hero {
+            padding: 32px;
+            gap: 24px;
+        }
+
+            .tb-hero h1 {
+                font-size: 34px;
+            }
+
+        .tb-products-section .tb-product-grid {
+            grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+        }
+    }
+
+    @@media (max-width: 768px) {
+        .tb-hero {
+            grid-template-columns: 1fr;
+            padding: 25px;
+        }
+
+            .tb-hero h1 {
+                font-size: 30px;
+            }
+
+        .tb-hero-right img {
+            height: 250px;
+        }
+
+        .tb-products-section .tb-product-grid {
+            grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+            gap: 14px !important;
+        }
+
+        .tb-products-section .tb-product-image {
+            height: 200px !important;
+        }
+
+        .tb-products-section .tb-product-body {
+            padding: 12px !important;
+        }
+    }
+
+    @@media (max-width: 480px) {
+        .tb-hero {
+            padding: 20px 16px;
+        }
+
+            .tb-hero h1 {
+                font-size: 27px;
+            }
+
+            .tb-hero .tb-search input {
+                padding: 0 10px;
+            }
+
+            .tb-hero .tb-search button {
+                padding: 0 12px;
+                font-size: 13px;
+            }
+
+        .tb-products-section .tb-section-title h2 {
+            font-size: 21px;
+        }
+
+        .tb-products-section .tb-product-grid {
+            gap: 10px !important;
+        }
+
+        .tb-products-section .tb-product-image {
+            height: 165px !important;
+            padding: 8px !important;
+        }
+
+        .tb-products-section .tb-product-body {
+            padding: 10px !important;
+            gap: 9px;
+        }
+
+            .tb-products-section .tb-product-body h3 {
+                font-size: 13px !important;
+                min-height: 40px;
+            }
+
+        .tb-products-section .tb-product-price {
+            font-size: 15px !important;
+        }
+
+        .tb-products-section .tb-detail-button {
+            font-size: 12px;
+            padding: 10px 6px !important;
+        }
+    }
+</style>
+
+<!-- BANNER TRANG CHỦ -->
+<section class="tb-hero">
+
+    <div class="tb-hero-left">
+
+        <span class="tb-welcome">
+            📚 Chào mừng đến với ThegioiBook
+        </span>
+
+        <h1>
+            Khám phá thế giới
+            <span>sách tuyệt vời</span>
+        </h1>
+
+        <p>
+            Tìm kiếm những cuốn sách yêu thích,
+            khám phá tri thức và lựa chọn
+            những sản phẩm chất lượng tại ThegioiBook.
+        </p>
+
+        @using (Html.BeginForm(
+            "Index",
+            "Home",
+            FormMethod.Get,
+            new { @class = "tb-search" }))
+        {
+            <input type="text"
+                   name="searchTerm"
+                   value="@searchTerm"
+                   placeholder="Tìm sản phẩm bạn cần..." />
+
+            <button type="submit">
+                🔍 Tìm kiếm
+            </button>
+        }
+
+        <div class="tb-benefits">
+            <div>🚚 Giao hàng nhanh</div>
+            <div>🛡️ Sản phẩm chất lượng</div>
+            <div>📚 Kho sách đa dạng</div>
+        </div>
+
+    </div>
+
+    <div class="tb-hero-right">
+        <img src="https://static.vecteezy.com/system/resources/previews/026/855/285/large_2x/world-book-day-design-of-a-collection-of-stack-of-books-for-banner-background-ai-generative-photo.jpg"
+             alt="ThegioiBook - Thế giới sách"
+             loading="eager" />
+    </div>
+
+</section>
+
+<!-- SẢN PHẨM NỔI BẬT -->
+<section class="tb-products-section">
+
+    <div class="tb-section-title">
+
+        <h2>🔥 Sản phẩm nổi bật</h2>
+
+        <a href="@Url.Action("ProductList", "Home", new { area = "" })">
+            Xem tất cả →
+        </a>
+
+    </div>
+
+    <div class="tb-product-grid">
+
+        @foreach (var product in products)
+        {
+            string imagePath = Convert.ToString(product.ProductImage);
+            string imageUrl = Url.Content("~/Content/images/no-image.png");
+
+            if (!string.IsNullOrWhiteSpace(imagePath))
             {
-                <div class="input-group">
-                    @Html.TextBox("searchTerm", Model.SearchTerm, new { @class = "form-control", @placeholder = "Nhập tên sản phẩm, mô tả hoặc danh mục cần tìm..." })
-                    <button class="btn btn-primary" type="submit"><i class="fa fa-search"></i> Tìm kiếm</button>
+                imagePath = imagePath.Trim();
+
+                if (imagePath.StartsWith("http://",
+                    StringComparison.OrdinalIgnoreCase) ||
+                    imagePath.StartsWith("https://",
+                    StringComparison.OrdinalIgnoreCase))
+                {
+                    imageUrl = imagePath;
+                }
+                else if (imagePath.StartsWith("~/"))
+                {
+                    imageUrl = Url.Content(imagePath);
+                }
+                else if (imagePath.StartsWith("/"))
+                {
+                    imageUrl = Url.Content("~" + imagePath);
+                }
+                else if (imagePath.Contains("/"))
+                {
+                    imageUrl = Url.Content("~/" + imagePath);
+                }
+                else
+                {
+                    imageUrl = Url.Content(
+                        "~/Images/products/" + imagePath);
+                }
+            }
+
+            <div class="tb-product-card">
+
+                <div class="tb-product-image">
+                    <img src="@imageUrl"
+                         alt="@product.ProductName"
+                         loading="lazy"
+                         onerror="this.onerror=null;this.src='@Url.Content("~/Content/images/no-image.png")';" />
                 </div>
-            }
-        </div>
+
+                <div class="tb-product-body">
+
+                    <h3>@product.ProductName</h3>
+
+                    <p class="tb-product-price">
+                        @string.Format("{0:N0} đ", product.ProductPrice)
+                    </p>
+
+                    <a class="tb-detail-button"
+                       href="@Url.Action("Details", "Home",
+                           new
+                           {
+                               area = "",
+                               id = product.ProductID
+                           })">
+                        Xem chi tiết
+                    </a>
+
+                </div>
+            </div>
+        }
+
     </div>
 
-    <!-- Banner / Tiêu đề -->
-    <div class="jumbotron bg-light p-4 rounded mb-4 text-center">
-        <h1 class="display-5">Chào mừng đến với MyStore!</h1>
-        <p class="lead">Khám phá các sản phẩm chất lượng cao và xu hướng mới nhất tại cửa hàng của chúng tôi.</p>
-    </div>
-
-    <!-- 1. Danh sách sản phẩm nổi bật (Top 10 bán chạy) -->
-    <div class="mb-5">
-        <h3 class="border-bottom pb-2 mb-3 text-danger"><i class="fa fa-fire"></i> Sản phẩm nổi bật</h3>
-        <div class="row">
-            @if (Model.FeaturedProducts != null && Model.FeaturedProducts.Any())
-            {
-                foreach (var product in Model.FeaturedProducts)
-                {
-                    <div class="col-md-3 mb-4">
-                        <div class="card h-100 shadow-sm">
-                            <img src="~/Content/images/@product.ProductImage" class="card-img-top" alt="@product.ProductName" style="height: 200px; object-fit: cover;" onerror="this.src='https://via.placeholder.com/200'" />
-                            <div class="card-body d-flex flex-column">
-                                <h5 class="card-title">@product.ProductName</h5>
-                                <p class="card-text text-danger font-weight-bold">@string.Format("{0:N0} đ", product.ProductPrice)</p>
-                                <a href="@Url.Action("Details", "Products", new { id = product.ProductID })" class="btn btn-outline-primary mt-auto">Xem chi tiết</a>
-                            </div>
-                        </div>
-                    </div>
-                }
-            }
-            else
-            {
-                <p class="text-muted text-center w-100">Chưa có sản phẩm nổi bật nào.</p>
-            }
+    @if (!products.Any())
+    {
+        <div class="tb-empty">
+            Không tìm thấy sản phẩm phù hợp.
         </div>
-    </div>
+    }
 
-    <!-- 2. Danh sách sản phẩm mới (Có phân trang PagedList) -->
-    <div class="mb-5">
-        <h3 class="border-bottom pb-2 mb-3 text-primary"><i class="fa fa-star"></i> Sản phẩm mới</h3>
-        <div class="row">
-            @if (Model.NewProducts != null && Model.NewProducts.Any())
-            {
-                foreach (var product in Model.NewProducts)
-                {
-                    <div class="col-md-4 mb-4">
-                        <div class="card h-100 shadow-sm">
-                            <img src="~/Content/images/@product.ProductImage" class="card-img-top" alt="@product.ProductName" style="height: 220px; object-fit: cover;" onerror="this.src='https://via.placeholder.com/200'" />
-                            <div class="card-body d-flex flex-column">
-                                <h5 class="card-title">@product.ProductName</h5>
-                                <p class="card-text text-danger font-weight-bold">@string.Format("{0:N0} đ", product.ProductPrice)</p>
-                                <a href="@Url.Action("Details", "Products", new { id = product.ProductID })" class="btn btn-primary mt-auto">Mua ngay / Chi tiết</a>
-                            </div>
-                        </div>
-                    </div>
-                }
-            }
-            else
-            {
-                <p class="text-muted text-center w-100">Không tìm thấy sản phẩm phù hợp.</p>
-            }
-        </div>
-
-        <!-- Thanh phân trang PagedList -->
-        <div class="d-flex justify-content-center mt-4">
-            @Html.PagedListPager(Model.NewProducts, page => Url.Action("Index", new { page, searchTerm = Model.SearchTerm }), new PagedListRenderOptions { Display = PagedListDisplayMode.IfNeeded })
-        </div>
-    </div>
-</div>
+</section>

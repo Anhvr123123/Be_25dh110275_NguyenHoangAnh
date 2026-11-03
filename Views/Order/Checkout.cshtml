@@ -1,68 +1,540 @@
-﻿@model Be_25dh110275_NguyenHoangAnh.Models.ViewModel.CheckoutVM
+﻿
+@model Be_25dh110275_NguyenHoangAnh.Models.ViewModel.CheckoutVM
 
 @{
-    ViewBag.Title = "Thanh toán đơn hàng - MyStore";
-    Layout = "~/Views/Shared/_CustomerLayout.cshtml";}
+    ViewBag.Title = "Thanh toán đơn hàng";
+    Layout = "~/Views/Shared/_CustomerLayout.cshtml";
+}
 
-<div class="container mt-4">
-    <h2 class="mb-4"><i class="fa fa-credit-card"></i> Thông Tin Thanh Toán</h2>
+<style>
+    .tb-checkout {
+        padding: 25px 0 70px;
+    }
 
-    @using (Html.BeginForm("Checkout", "Order", FormMethod.Post))
+    .tb-checkout-title {
+        color: #087e42;
+        font-size: 30px;
+        font-weight: 700;
+        margin-bottom: 28px;
+    }
+
+    .tb-checkout-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+        gap: 24px;
+        align-items: start;
+    }
+
+    .tb-checkout-card {
+        background: #fff;
+        border: 1px solid #e5e7eb;
+        border-radius: 14px;
+        padding: 26px;
+        box-shadow: 0 5px 18px rgba(0,0,0,0.05);
+        min-width: 0;
+    }
+
+        .tb-checkout-card h3 {
+            color: #087e42;
+            font-size: 21px;
+            font-weight: 700;
+            margin: 0 0 25px;
+        }
+
+    .tb-checkout .form-group {
+        margin-bottom: 20px;
+    }
+
+        .tb-checkout .form-group label {
+            display: block;
+            font-weight: 600;
+            color: #222;
+            margin-bottom: 9px;
+        }
+
+    .tb-checkout .form-control {
+        display: block;
+        width: 100%;
+        padding: 12px 14px;
+        border: 1px solid #cbd5e1;
+        border-radius: 8px;
+        font-size: 15px;
+        background: white;
+        box-sizing: border-box;
+        height: auto;
+    }
+
+        .tb-checkout .form-control:focus {
+            border-color: #087e42;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(8,126,66,0.12);
+        }
+
+    .tb-checkout textarea.form-control {
+        min-height: 110px;
+        resize: vertical;
+    }
+
+    .tb-checkout .text-danger {
+        color: #dc3545;
+        font-size: 13px;
+    }
+
+    .tb-checkout-error {
+        background: #fff1f2;
+        border: 1px solid #fecdd3;
+        border-radius: 9px;
+        padding: 15px 18px;
+        margin-bottom: 22px;
+        color: #b91c1c;
+    }
+
+        .tb-checkout-error ul {
+            margin: 6px 0;
+            padding-left: 22px;
+        }
+
+    .tb-order-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 15px;
+        padding: 14px 0;
+        border-bottom: 1px solid #e5e7eb;
+    }
+
+    .tb-order-name {
+        font-weight: 600;
+        color: #222;
+        margin-bottom: 6px;
+    }
+
+    .tb-order-quantity {
+        color: #64748b;
+        font-size: 13px;
+    }
+
+    .tb-order-price {
+        white-space: nowrap;
+        font-weight: 600;
+        color: #374151;
+    }
+
+    .tb-order-total {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        margin: 23px 0;
+        font-size: 17px;
+        font-weight: 700;
+    }
+
+        .tb-order-total strong {
+            font-size: 24px;
+            color: #e11d48;
+            white-space: nowrap;
+        }
+
+    .tb-payment-method {
+        background: #f0fdf4;
+        border: 1px solid #bbf7d0;
+        border-radius: 10px;
+        padding: 17px;
+        margin-bottom: 22px;
+    }
+
+        .tb-payment-method h4 {
+            color: #087e42;
+            font-size: 17px;
+            font-weight: 700;
+            margin: 0 0 15px;
+        }
+
+    .tb-payment-option {
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+        padding: 13px;
+        background: #fff;
+        border: 1px solid #bbf7d0;
+        border-radius: 9px;
+        cursor: pointer;
+        margin-bottom: 10px;
+    }
+
+        .tb-payment-option input {
+            margin-top: 4px;
+            accent-color: #087e42;
+            flex-shrink: 0;
+        }
+
+        .tb-payment-option span {
+            display: block;
+            min-width: 0;
+        }
+
+        .tb-payment-option strong {
+            display: block;
+            color: #166534;
+            font-size: 14px;
+            margin-bottom: 6px;
+        }
+
+        .tb-payment-option small {
+            display: block;
+            color: #64748b;
+            line-height: 1.5;
+        }
+    .tb-payment-option {
+        cursor: pointer;
+        opacity: 1;
+    }
+
+        .tb-payment-option:has(input:checked) {
+            border: 2px solid #087e42;
+            background: #e8f8ee;
+        }
+    .tb-checkout-submit {
+        display: block;
+        width: 100%;
+        background: #087e42;
+        color: #fff;
+        border: none;
+        border-radius: 9px;
+        padding: 15px;
+        font-size: 16px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: background 0.2s;
+    }
+
+        .tb-checkout-submit:hover {
+            background: #066b38;
+        }
+
+        .tb-checkout-submit:disabled {
+            opacity: 0.75;
+            cursor: wait;
+        }
+
+    .tb-checkout-back {
+        display: block;
+        text-align: center;
+        padding: 13px;
+        margin-top: 12px;
+        border: 1px solid #94a3b8;
+        border-radius: 9px;
+        color: #475569;
+        text-decoration: none;
+    }
+
+        .tb-checkout-back:hover {
+            background: #f1f5f9;
+            text-decoration: none;
+        }
+
+    @@media (max-width: 768px) {
+        .tb-checkout-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .tb-checkout-card {
+            padding: 20px;
+        }
+
+        .tb-checkout-title {
+            font-size: 25px;
+        }
+    }
+
+    @@media (max-width: 480px) {
+        .tb-checkout {
+            padding-top: 15px;
+        }
+
+        .tb-checkout-card {
+            padding: 16px;
+        }
+
+        .tb-order-total strong {
+            font-size: 20px;
+        }
+    }
+</style>
+
+<div class="tb-checkout">
+
+    <h2 class="tb-checkout-title">
+        💳 THÔNG TIN THANH TOÁN
+    </h2>
+
+    @if (TempData["Message"] != null)
     {
-        @Html.AntiForgeryToken()
-        <div class="row">
-            <!-- Cột trái: Form nhập thông tin khách hàng -->
-            <div class="col-md-7">
-                <div class="card p-4 shadow-sm mb-4">
-                    <h4 class="mb-3 text-primary">Thông tin giao hàng</h4>
-
-                    <div class="form-group mb-3">
-                        <label>Họ tên người nhận:</label>
-                        @Html.TextBoxFor(m => m.CustomerName, new { @class = "form-control", @required = "required", @placeholder = "Nhập họ tên đầy đủ" })
-                    </div>
-
-                    <div class="form-group mb-3">
-                        <label>Số điện thoại:</label>
-                        @Html.TextBoxFor(m => m.CustomerPhone, new { @class = "form-control", @required = "required", @placeholder = "Nhập số điện thoại liên hệ" })
-                    </div>
-
-                    <div class="form-group mb-3">
-                        <label>Email:</label>
-                        @Html.TextBoxFor(m => m.CustomerEmail, new { @class = "form-control", @type = "email", @placeholder = "Nhập địa chỉ email nhận hóa đơn" })
-                    </div>
-
-                    <div class="form-group mb-3">
-                        <label>Địa chỉ giao hàng chi tiết:</label>
-                        @Html.TextAreaFor(m => m.CustomerAddress, new { @class = "form-control", @rows = "3", @required = "required", @placeholder = "Số nhà, tên đường, phường/xã, quận/huyện..." })
-                    </div>
-                </div>
-            </div>
-
-            <!-- Cột phải: Tóm tắt đơn hàng -->
-            <div class="col-md-5">
-                <div class="card p-4 shadow-sm bg-light">
-                    <h4 class="mb-3 text-secondary">Đơn hàng của bạn</h4>
-                    <ul class="list-group mb-3">
-                        @foreach (var item in Model.CartItems)
-                        {
-                            <li class="list-group-item d-flex justify-content-between lh-condensed">
-                                <div>
-                                    <h6 class="my-0">@item.ProductName</h6>
-                                    <small class="text-muted">SL: @item.Quantity</small>
-                                </div>
-                                <span class="text-muted">@string.Format("{0:N0} đ", item.TotalPrice)</span>
-                            </li>
-                        }
-                        <li class="list-group-item d-flex justify-content-between bg-white">
-                            <span class="font-weight-bold">Tổng cộng:</span>
-                            <strong class="text-danger">@string.Format("{0:N0} đ", Model.TotalAmount)</strong>
-                        </li>
-                    </ul>
-
-                    <button type="submit" class="btn btn-success btn-lg btn-block"><i class="fa fa-check"></i> Xác nhận đặt hàng</button>
-                    <a href="@Url.Action("Index", "Cart")" class="btn btn-outline-secondary btn-block mt-2">Quay lại giỏ hàng</a>
-                </div>
-            </div>
+        <div class="tb-checkout-error">
+            @TempData["Message"]
         </div>
     }
+
+    @if (!ViewData.ModelState.IsValid)
+    {
+        <div class="tb-checkout-error">
+            <strong>Vui lòng kiểm tra thông tin đặt hàng:</strong>
+
+            @Html.ValidationSummary(
+                     false,
+                     "",
+                     new { @class = "text-danger" })
+        </div>
+    }
+
+    @using (Html.BeginForm(
+        "Checkout",
+        "Order",
+        new { area = "" },
+        FormMethod.Post,
+        new { id = "checkoutForm" }))
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="tb-checkout-grid">
+
+            <!-- THÔNG TIN GIAO HÀNG -->
+            <div class="tb-checkout-card">
+
+                <h3>📦 Thông tin giao hàng</h3>
+
+                <div class="form-group">
+                    @Html.LabelFor(
+                             m => m.CustomerName,
+                             "Họ tên người nhận")
+
+                    @Html.TextBoxFor(
+                             m => m.CustomerName,
+                             new
+                             {
+                                 @class = "form-control",
+                                 placeholder = "Nhập họ tên người nhận",
+                                 required = "required",
+                                 maxlength = "150"
+                             })
+
+                    @Html.ValidationMessageFor(
+                             m => m.CustomerName,
+                             "",
+                             new { @class = "text-danger" })
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(
+                             m => m.CustomerPhone,
+                             "Số điện thoại")
+
+                    @Html.TextBoxFor(
+                             m => m.CustomerPhone,
+                             new
+                             {
+                                 @class = "form-control",
+                                 type = "tel",
+                                 placeholder = "Nhập số điện thoại",
+                                 required = "required",
+                                 maxlength = "15"
+                             })
+
+                    @Html.ValidationMessageFor(
+                             m => m.CustomerPhone,
+                             "",
+                             new { @class = "text-danger" })
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(
+                             m => m.CustomerEmail,
+                             "Email")
+
+                    @Html.TextBoxFor(
+                             m => m.CustomerEmail,
+                             new
+                             {
+                                 @class = "form-control",
+                                 type = "email",
+                                 placeholder = "Nhập email (không bắt buộc)"
+                             })
+
+                    @Html.ValidationMessageFor(
+                             m => m.CustomerEmail,
+                             "",
+                             new { @class = "text-danger" })
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(
+                             m => m.ShippingAddress,
+                             "Địa chỉ giao hàng chi tiết")
+
+                    @Html.TextAreaFor(
+                             m => m.ShippingAddress,
+                             new
+                             {
+                                 @class = "form-control",
+                                 rows = "4",
+                                 placeholder = "Nhập số nhà, tên đường, phường/xã, tỉnh/thành phố...",
+                                 required = "required"
+                             })
+
+                    @Html.ValidationMessageFor(
+                             m => m.ShippingAddress,
+                             "",
+                             new { @class = "text-danger" })
+                </div>
+
+            </div>
+
+            <!-- THÔNG TIN ĐƠN HÀNG -->
+            <div class="tb-checkout-card">
+
+                <h3>🛒 Đơn hàng của bạn</h3>
+
+                @if (Model != null &&
+                     Model.CartItems != null &&
+                     Model.CartItems.Any())
+                {
+                    foreach (var item in Model.CartItems)
+                    {
+                        <div class="tb-order-item">
+
+                            <div>
+                                <div class="tb-order-name">
+                                    @item.ProductName
+                                </div>
+
+                                <div class="tb-order-quantity">
+                                    Số lượng: @item.Quantity
+                                </div>
+                            </div>
+
+                            <div class="tb-order-price">
+                                @string.Format(
+                                              "{0:N0} đ",
+                                              item.TotalPrice)
+                            </div>
+
+                        </div>
+                    }
+                }
+                else
+                {
+                    <p>Giỏ hàng đang trống.</p>
+                }
+
+                <div class="tb-order-total">
+
+                    <span>Tổng cộng:</span>
+
+                    <strong>
+                        @string.Format(
+                                      "{0:N0} đ",
+                                      Model != null
+                                          ? Model.TotalAmount
+                                          : 0)
+                    </strong>
+
+                </div>
+
+
+                <!-- PHƯƠNG THỨC THANH TOÁN -->
+                <div class="tb-payment-method">
+
+                    <h4>💳 Chọn phương thức thanh toán</h4>
+
+                    <label class="tb-payment-option">
+                        <input type="radio"
+                               name="PaymentMethod"
+                               value="COD"
+                               checked="checked" />
+
+                        <span>
+                            <strong>
+                                💵 Thanh toán khi nhận hàng (COD)
+                            </strong>
+                            <small>
+                                Thanh toán tiền mặt khi nhận sách.
+                            </small>
+                        </span>
+                    </label>
+
+                    <label class="tb-payment-option">
+                        <input type="radio"
+                               name="PaymentMethod"
+                               value="BANK" />
+
+                        <span>
+                            <strong>
+                                🏦 Chuyển khoản ngân hàng
+                            </strong>
+                            <small>
+                                Chuyển khoản theo thông tin ngân hàng
+                                do cửa hàng cung cấp.
+                            </small>
+                        </span>
+                    </label>
+
+                    @Html.ValidationMessageFor(
+                            m => m.PaymentMethod,
+                            "",
+                            new { @class = "text-danger" })
+
+                </div>
+
+
+                <!-- NÚT XÁC NHẬN -->
+                <button type="submit"
+                        id="btnConfirmOrder"
+                        class="tb-checkout-submit">
+                    ✔ Xác nhận đặt hàng
+                </button>
+
+                <a class="tb-checkout-back"
+                   href="@Url.Action(
+                       "Index2",
+                       "Cart",
+                       new { area = "" })">
+                    ← Quay lại giỏ hàng
+                </a>
+
+            </div>
+
+        </div>
+    }
+
 </div>
+
+<script>
+    (function () {
+        var form = document.getElementById("checkoutForm");
+        var button = document.getElementById("btnConfirmOrder");
+
+        if (!form || !button) {
+            return;
+        }
+
+        form.addEventListener("submit", function (event) {
+
+            if (!form.checkValidity()) {
+                return;
+            }
+
+            // Chặn bấm liên tục tạo nhiều đơn hàng
+            if (form.dataset.submitting === "true") {
+                event.preventDefault();
+                return;
+            }
+
+            form.dataset.submitting = "true";
+
+            button.disabled = true;
+            button.textContent = "Đang xử lý đơn hàng...";
+
+        });
+    })();
+</script>

@@ -1,0 +1,175 @@
+﻿
+@{
+    ViewBag.Title = "Đăng nhập Admin";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1" />
+
+    <title>Đăng nhập Admin - My Store</title>
+
+    <style>
+        body {
+            margin: 0;
+            min-height: 100vh;
+            background: #f7f8fa;
+            font-family: Arial, sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .login-card {
+            width: 400px;
+            max-width: calc(100% - 40px);
+            background: white;
+            padding: 30px;
+            border: 1px solid #ddd;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,.08);
+            box-sizing: border-box;
+        }
+
+        .login-title {
+            text-align: center;
+            color: #198754;
+            font-size: 26px;
+            font-weight: bold;
+        }
+
+        .login-subtitle {
+            text-align: center;
+            color: #777;
+            margin: 12px 0 35px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            box-sizing: border-box;
+        }
+
+        .login-btn {
+            width: 100%;
+            background: #198754;
+            color: white;
+            border: none;
+            padding: 14px;
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .login-btn:hover {
+            background: #146c43;
+        }
+
+        .login-links {
+            text-align: center;
+            margin-top: 22px;
+        }
+
+        .login-links a {
+            color: #0d6efd;
+            text-decoration: none;
+        }
+
+        .error-box {
+            background: #f8d7da;
+            color: #842029;
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+        }
+
+        .success-box {
+            background: #d1e7dd;
+            color: #0f5132;
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="login-card">
+
+        <div class="login-title">
+            MY STORE
+        </div>
+
+        <div class="login-subtitle">
+            Khu vực quản trị hệ thống
+        </div>
+
+        @if (ViewBag.Error != null)
+        {
+            <div class="error-box">
+                @ViewBag.Error
+            </div>
+        }
+
+        @if (TempData["Success"] != null)
+        {
+            <div class="success-box">
+                @TempData["Success"]
+            </div>
+        }
+
+        @using (Html.BeginForm(
+            "Login", "Account",
+            new { area = "Admin" },
+            FormMethod.Post))
+        {
+            @Html.AntiForgeryToken()
+
+            <div class="form-group">
+                <label>Tên đăng nhập Admin</label>
+                <input type="text"
+                       name="username"
+                       placeholder="Nhập tên đăng nhập..."
+                       required />
+            </div>
+
+            <div class="form-group">
+                <label>Mật khẩu</label>
+                <input type="password"
+                       name="password"
+                       placeholder="Nhập mật khẩu..."
+                       required />
+            </div>
+
+            <button type="submit" class="login-btn">
+                ĐĂNG NHẬP QUẢN TRỊ
+            </button>
+        }
+
+        <div class="login-links">
+            <a href="@Url.Action("Register", "Account", new { area = "Admin" })">
+                Đăng ký tài khoản Admin
+            </a>
+        </div>
+
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,200 @@
+﻿
+@model Be_25dh110275_NguyenHoangAnh.Models.User
+
+@{
+    ViewBag.Title = "Chỉnh sửa thông tin Admin";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<style>
+    .admin-edit-container {
+        max-width: 700px;
+        margin: 50px auto 80px;
+    }
+
+    .admin-edit-card {
+        background: #fff;
+        border: 1px solid #ddd;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 4px 12px rgba(0,0,0,.09);
+    }
+
+    .admin-edit-header {
+        background: #198754;
+        color: white;
+        padding: 22px;
+        font-size: 24px;
+        font-weight: bold;
+    }
+
+    .admin-edit-body {
+        padding: 30px;
+    }
+
+    .admin-edit-avatar {
+        text-align: center;
+        font-size: 75px;
+        color: #56328a;
+        margin-bottom: 30px;
+    }
+
+    .admin-edit-group {
+        margin-bottom: 22px;
+    }
+
+        .admin-edit-group label {
+            display: block;
+            font-weight: bold;
+            color: #198754;
+            margin-bottom: 8px;
+        }
+
+    .admin-edit-input {
+        display: block;
+        width: 100%;
+        padding: 12px;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        font-size: 15px;
+        box-sizing: border-box;
+    }
+
+        .admin-edit-input:focus {
+            border-color: #198754;
+            outline: none;
+            box-shadow: 0 0 5px rgba(25,135,84,.3);
+        }
+
+        .admin-edit-input:disabled {
+            background: #f1f3f5;
+            color: #555;
+        }
+
+    .admin-edit-error {
+        background: #f8d7da;
+        color: #842029;
+        padding: 14px;
+        border-radius: 6px;
+        margin-bottom: 20px;
+    }
+
+    .admin-edit-actions {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+        margin-top: 25px;
+    }
+
+    .admin-edit-btn {
+        display: inline-block;
+        padding: 12px 22px;
+        border: none;
+        border-radius: 6px;
+        color: white !important;
+        font-weight: bold;
+        text-decoration: none !important;
+        cursor: pointer;
+    }
+
+    .admin-edit-save {
+        background: #198754;
+    }
+
+    .admin-edit-cancel {
+        background: #6c757d;
+    }
+</style>
+
+<div class="admin-edit-container">
+    <div class="admin-edit-card">
+
+        <div class="admin-edit-header">
+            ✎ CHỈNH SỬA THÔNG TIN ADMIN
+        </div>
+
+        <div class="admin-edit-body">
+
+            <div class="admin-edit-avatar">
+                <span class="glyphicon glyphicon-user"></span>
+            </div>
+
+            @if (ViewBag.Error != null)
+            {
+                <div class="admin-edit-error">
+                    @ViewBag.Error
+                </div>
+            }
+
+            @using (Html.BeginForm("Edit", "AdminProfile",
+                new { area = "Admin" }, FormMethod.Post))
+            {
+                @Html.AntiForgeryToken()
+
+                <div class="admin-edit-group">
+                    <label>Tên đăng nhập Admin</label>
+                    <input type="text"
+                           class="admin-edit-input"
+                           value="@Model.Username"
+                           disabled />
+                </div>
+
+                <div class="admin-edit-group">
+                    <label>Quyền tài khoản</label>
+                    <input type="text"
+                           class="admin-edit-input"
+                           value="Quản trị viên (Admin)"
+                           disabled />
+                </div>
+
+                <div class="admin-edit-group">
+                    <label>Mật khẩu hiện tại</label>
+                    <input type="password"
+                           name="CurrentPassword"
+                           class="admin-edit-input"
+                           placeholder="Nhập mật khẩu hiện tại"
+                           autocomplete="current-password"
+                           required />
+                </div>
+
+                <div class="admin-edit-group">
+                    <label>Mật khẩu mới</label>
+                    <input type="password"
+                           name="NewPassword"
+                           class="admin-edit-input"
+                           placeholder="Nhập mật khẩu mới"
+                           autocomplete="new-password"
+                           minlength="6"
+                           maxlength="50"
+                           required />
+                </div>
+
+                <div class="admin-edit-group">
+                    <label>Xác nhận mật khẩu mới</label>
+                    <input type="password"
+                           name="ConfirmPassword"
+                           class="admin-edit-input"
+                           placeholder="Nhập lại mật khẩu mới"
+                           autocomplete="new-password"
+                           required />
+                </div>
+
+                <div class="admin-edit-actions">
+
+                    <button type="submit"
+                            class="admin-edit-btn admin-edit-save">
+                        ✔ LƯU THAY ĐỔI
+                    </button>
+
+                    <a href="@Url.Action("Index", "AdminProfile",
+                        new { area = "Admin" })"
+                       class="admin-edit-btn admin-edit-cancel">
+                        ← HỦY
+                    </a>
+
+                </div>
+            }
+
+        </div>
+    </div>
+</div>

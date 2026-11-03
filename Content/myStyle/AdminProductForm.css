@@ -1,0 +1,123 @@
+﻿
+.product-form-container {
+    max-width: 950px;
+    margin: 25px auto 50px;
+}
+
+.product-form-title {
+    background: #1E8A54;
+    color: white;
+    padding: 18px 25px;
+    border-radius: 8px 8px 0 0;
+    font-size: 23px;
+    font-weight: bold;
+}
+
+.product-form-card {
+    background: #fff;
+    padding: 30px;
+    border: 1px solid #ddd;
+    border-radius: 0 0 10px 10px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+}
+
+    .product-form-card .form-group {
+        margin-bottom: 22px;
+    }
+
+    .product-form-card label,
+    .product-form-card .control-label {
+        display: block;
+        font-weight: 600;
+        color: #245d42;
+        margin-bottom: 8px;
+        font-size: 15px;
+        max-width: 100%;
+    }
+
+    .product-form-card input[type="text"],
+    .product-form-card input[type="number"],
+    .product-form-card input[type="url"],
+    .product-form-card select,
+    .product-form-card textarea,
+    .product-form-card .form-control {
+        display: block;
+        width: 100%;
+        max-width: 100%;
+        min-height: 44px;
+        padding: 10px 14px;
+        border: 1px solid #ced4da;
+        border-radius: 6px;
+        background: #fff;
+        box-sizing: border-box;
+        font-size: 15px;
+    }
+
+    .product-form-card textarea {
+        min-height: 180px;
+        resize: vertical;
+        line-height: 1.6;
+    }
+
+        .product-form-card input:focus,
+        .product-form-card select:focus,
+        .product-form-card textarea:focus {
+            outline: none;
+            border-color: #1E8A54;
+            box-shadow: 0 0 0 3px rgba(30,138,84,0.12);
+        }
+
+    .product-form-card .col-md-10,
+    .product-form-card .col-md-2 {
+        width: 100%;
+        float: none;
+        padding-left: 0;
+        padding-right: 0;
+        max-width: 100%;
+    }
+
+    .product-form-card .form-horizontal .control-label {
+        text-align: left;
+        padding-top: 0;
+    }
+
+.product-form-actions {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    border-top: 1px solid #eee;
+    padding-top: 22px;
+    margin-top: 25px;
+}
+
+.product-btn-save {
+    background: #1E8A54;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 12px 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+    .product-btn-save:hover {
+        background: #146c40;
+    }
+
+.product-btn-back {
+    background: #0d6efd;
+    color: white;
+    padding: 12px 24px;
+    border-radius: 6px;
+    text-decoration: none;
+}
+
+    .product-btn-back:hover {
+        background: #0b5ed7;
+        color: white;
+        text-decoration: none;
+    }
+
+.product-form-card .text-danger {
+    color: #dc3545;
+}

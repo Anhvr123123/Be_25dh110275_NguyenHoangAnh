@@ -1,0 +1,115 @@
+﻿@model PagedList.IPagedList<Be_25dh110275_NguyenHoangAnh.Models.Product>
+    @using System.Linq
+    @using PagedList
+    @using PagedList.Mvc
+
+    @{
+    ViewBag.Title = "Danh mục sản phẩm";
+    Layout = "~/Views/Shared/_CustomerLayout.cshtml";
+
+    string categoryName = ViewBag.CategoryName == null
+    ? "Tất cả sản phẩm"
+    : ViewBag.CategoryName.ToString();
+
+    object categoryId = ViewBag.CategoryId;
+    }
+
+    <div class="container mt-4">
+
+        <h2 class="mb-4">@categoryName</h2>
+
+        @if (Model != null && Model.Any())
+        {
+        <div class="row">
+
+            @foreach (var item in Model)
+            {
+            string imageUrl = string.IsNullOrWhiteSpace(item.ProductImage)
+            ? Url.Content("~/Content/no-image.png")
+            : item.ProductImage;
+
+            string detailsUrl = Url.Action(
+            "Details", "Home",
+            new { id = item.ProductID });
+
+            string cartUrl = Url.Action(
+            "AddToCart", "Cart",
+            new { id = item.ProductID, quantity = 1 });
+
+            <div class="col-md-3 mb-4">
+                <div class="card h-100 shadow-sm">
+
+                    <a href="@detailsUrl">
+                        <img src="@imageUrl"
+                             alt="@item.ProductName"
+                             class="card-img-top"
+                             style="height:200px;object-fit:contain;" />
+                    </a>
+
+                    <div class="card-body d-flex flex-column">
+
+                        <h5 class="card-title">
+                            @item.ProductName
+                        </h5>
+
+                        <p class="text-danger font-weight-bold">
+                            @string.Format("{0:N0} đ", item.ProductPrice)
+                        </p>
+
+                        <div class="mt-auto">
+
+                            <a href="@detailsUrl"
+                               class="btn btn-primary btn-block mb-2">
+                                Xem chi tiết
+                            </a>
+
+                            <a href="@cartUrl"
+                               class="btn btn-success btn-block">
+                                Thêm vào giỏ
+                            </a>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            }
+
+        </div>
+
+        if (Model.PageCount > 1)
+        {
+        <div class="d-flex justify-content-center mt-4">
+
+            @Html.PagedListPager(
+            Model,
+            page => Url.Action(
+            "ProductList",
+            "Home",
+            new
+            {
+            categoryId = categoryId,
+            page = page
+            })
+            )
+
+        </div>
+        }
+        }
+        else
+        {
+        <div class="text-center py-5">
+
+            <h4>Danh mục này chưa có sản phẩm.</h4>
+
+            @Html.ActionLink(
+            "Quay lại trang chủ",
+            "Index",
+            "Home",
+            null,
+            new { @class = "btn btn-primary mt-3" }
+            )
+
+        </div>
+        }
+
+    </div>

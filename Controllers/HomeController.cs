@@ -1,11 +1,11 @@
-﻿using Be_25dh110275_NguyenHoangAnh.Models;
-using Be_25dh110275_NguyenHoangAnh.Models.ViewModel;
-using PagedList;
+﻿
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Web;
+using System.Net;
 using System.Web.Mvc;
+using PagedList;
+using Be_25dh110275_NguyenHoangAnh.Models;
+using Be_25dh110275_NguyenHoangAnh.Models.ViewModel;
 
 namespace Be_25dh110275_NguyenHoangAnh.Controllers
 {
@@ -13,60 +13,96 @@ namespace Be_25dh110275_NguyenHoangAnh.Controllers
     {
         private MyStoreEntities db = new MyStoreEntities();
 
-        // GET: Home/Index
-        public ActionResult Index(string searchTerm, int? page)
-        {
-            var model = new HomeProductVM();
-            var products = db.Products.AsQueryable();
 
-            // Tìm kiếm sản phẩm theo từ khóa
-            if (!string.IsNullOrEmpty(searchTerm))
+        public ActionResult Index(string searchTerm)
+        {
+            using (var db = new MyStoreEntities())
             {
-                model.SearchTerm = searchTerm;
-                products = products.Where(p => p.ProductName.Contains(searchTerm) ||
-                                               p.ProductDecription.Contains(searchTerm) ||
-                                               p.Category.CategoryName.Contains(searchTerm));
+                var query = db.Products.AsQueryable();
+
+                if (!string.IsNullOrWhiteSpace(searchTerm))
+                {
+                    query = query.Where(p =>
+                        p.ProductName.Contains(searchTerm));
+                }
+
+                ViewBag.FeaturedProducts = query
+                    .OrderByDescending(p => p.ProductID)
+                    .Take(8)
+                    .ToList();
+
+                ViewBag.SearchTerm = searchTerm;
             }
 
-            int pageNumber = page ?? 1;
-            int pageSize = 6; // Số sản phẩm mỗi trang
-
-            // Lấy danh sách dạng LINQ thô rồi Select sang đúng kiểu Product của Database
-            model.FeaturedProducts = products.OrderByDescending(p => p.ProductID)
-                                             .Take(10)
-                                             .ToList();
-
-            var listNew = products.OrderBy(p => p.ProductID).ToList();
-            model.NewProducts = listNew.ToPagedList(pageNumber, pageSize);
-
-            return View(model);
+            return View();
         }
+
         [ChildActionOnly]
         public ActionResult CategoryMenu()
         {
             var categories = db.Categories.ToList();
             return PartialView("CategoryMenuPV", categories);
         }
-        // GET: Home/Details/5
+
+        public ActionResult ProductList(int? categoryId, int? page)
+        {
+            int pageNumber = page ?? 1;
+
+            if (pageNumber < 1)
+                pageNumber = 1;
+
+            int pageSize = 8;
+
+            var products = db.Products.AsQueryable();
+
+            if (categoryId.HasValue)
+            {
+                var category = db.Categories.Find(categoryId.Value);
+
+                if (category == null)
+                    return HttpNotFound();
+
+                products = products.Where(p =>
+                    p.CategoryID == categoryId.Value);
+
+                ViewBag.CategoryName = category.CategoryName;
+            }
+            else
+            {
+                ViewBag.CategoryName = "Tất cả sản phẩm";
+            }
+
+            ViewBag.CategoryId = categoryId;
+
+            var result = products
+                .OrderBy(p => p.ProductID)
+                .ToPagedList(pageNumber, pageSize);
+
+            return View(result);
+        }
+
         public ActionResult Details(int? id)
         {
             if (id == null)
             {
-                return new HttpStatusCodeResult(System.Net.HttpStatusCode.BadRequest);
+                return new HttpStatusCodeResult(
+                    HttpStatusCode.BadRequest);
             }
 
-            // Chỉ định rõ namespace của Model database
-            Be_25dh110275_NguyenHoangAnh.Models.Product product = db.Products.Find(id);
+            Be_25dh110275_NguyenHoangAnh.Models.Product
+                product = db.Products.Find(id.Value);
+
             if (product == null)
-            {
                 return HttpNotFound();
-            }
 
-            // Lấy danh sách sản phẩm liên quan cùng danh mục
             var relatedProducts = db.Products
-                                    .Where(p => p.CategoryID == product.CategoryID && p.ProductID != product.ProductID)
-                                    .Take(4)
-                                    .ToList();
+                .Where(p =>
+                    p.CategoryID == product.CategoryID &&
+                    p.ProductID != product.ProductID)
+                .OrderBy(p => p.ProductID)
+                .Take(4)
+                .ToList();
+
             ViewBag.RelatedProducts = relatedProducts;
 
             return View(product);
@@ -75,9 +111,8 @@ namespace Be_25dh110275_NguyenHoangAnh.Controllers
         protected override void Dispose(bool disposing)
         {
             if (disposing)
-            {
                 db.Dispose();
-            }
+
             base.Dispose(disposing);
         }
     }

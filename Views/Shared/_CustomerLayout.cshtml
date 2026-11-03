@@ -1,156 +1,409 @@
-﻿@{
-    // Lấy thông tin giỏ hàng từ Session
-    var cart = Session["Cart"] as Be_25dh110275_NguyenHoangAnh.Models.ViewModel.Cart;
+﻿
+@using System
+@using System.Linq
+@using Be_25dh110275_NguyenHoangAnh.Models
+@using Be_25dh110275_NguyenHoangAnh.Models.ViewModel
 
-    // Khởi tạo ViewBag.pmmodel để kiểm tra trạng thái đăng nhập
-    ViewBag.pmmodel = new Be_25dh110275_NguyenHoangAnh.Models.ViewModel.PersonalMenuVM
+@{
+    ViewBag.SiteName = "ThegioiBook";
+
+    string username = Convert.ToString(Session["Username"]);
+    bool isLoggedIn = !string.IsNullOrWhiteSpace(username);
+    bool isAdmin = Convert.ToString(Session["UserRole"]) == "A";
+
+    var categories = new System.Collections.Generic.List<Category>();
+
+    using (var db = new MyStoreEntities())
     {
-        IsLoggedIn = User.Identity.IsAuthenticated,
-        Username = User.Identity.IsAuthenticated ? User.Identity.Name : string.Empty,
-        CartCount = (cart != null && cart.Items != null) ? cart.Items.Sum(i => i.Quantity) : 0
-    };
+        categories = db.Categories
+            .OrderBy(c => c.CategoryName)
+            .ToList();
+    }
+
+    int cartCount = 0;
+    var cart = Session["Cart"] as Cart;
+
+    if (cart != null && cart.Items != null)
+    {
+        cartCount = cart.Items.Sum(i => i.Quantity);
+    }
 }
-@Html.Action("CategoryMenu", "Home")
+
 <!DOCTYPE html>
-<html>
+<html lang="vi">
 <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewBag.Title - My Store</title>
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0" />
+
+    <title>@ViewBag.Title - ThegioiBook</title>
+
     @Styles.Render("~/Content/css")
-    @Scripts.Render("~/bundles/modernizr")
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+
+    <link rel="stylesheet"
+          href="@Url.Content("~/Content/myStyle/CustomerHome.css?v=80")" />
+
     <style>
-        /* CSS tùy chỉnh cho Menu cá nhân dạng Dropdown */
-        .navbar-nav {
-            list-style-type: none;
-            padding: 0;
-            margin: 0;
-            display: flex;
-            align-items: center;
+        /* ===== HEADER ===== */
+
+        .tb-header {
+            position: relative !important;
+            z-index: 1000 !important;
+            overflow: visible !important;
         }
 
-            .navbar-nav > li {
-                margin-right: 20px;
-                position: relative;
+            .tb-header .tb-header-content {
+                display: flex !important;
+                align-items: center !important;
+                justify-content: space-between !important;
+                flex-wrap: nowrap !important;
+                gap: 20px !important;
+                overflow: visible !important;
             }
 
-        .dropdown-content {
-            display: none;
-            position: absolute;
-            right: 0;
-            background-color: #f9f9f9;
-            min-width: 160px;
-            box-shadow: 0px 8px 16px rgba(0,0,0,0.2);
-            z-index: 1000;
-            border-radius: 4px;
-        }
-
-            .dropdown-content a {
-                color: black;
-                padding: 10px 16px;
-                text-decoration: none;
-                display: block;
+            .tb-header .tb-logo {
+                flex-shrink: 0 !important;
+                white-space: nowrap !important;
             }
 
-                .dropdown-content a:hover {
-                    background-color: #f1f1f1;
+            /* ===== THANH MENU ===== */
+
+            .tb-header .tb-nav {
+                display: flex !important;
+                align-items: center !important;
+                justify-content: flex-end !important;
+                flex-wrap: nowrap !important;
+                gap: 18px !important;
+                width: auto !important;
+                overflow: visible !important;
+            }
+
+                .tb-header .tb-nav > a {
+                    display: inline-flex !important;
+                    align-items: center !important;
+                    white-space: nowrap !important;
+                    flex-shrink: 0 !important;
+                    text-decoration: none !important;
                 }
 
-        .dropdown:hover .dropdown-content {
-            display: block;
+            /* ===== TÀI KHOẢN ===== */
+
+            .tb-header .tb-user-menu {
+                position: relative !important;
+                display: inline-flex !important;
+                align-items: center !important;
+                flex-shrink: 0 !important;
+                width: auto !important;
+                overflow: visible !important;
+            }
+
+            .tb-header .tb-user-trigger {
+                display: inline-flex !important;
+                align-items: center !important;
+                gap: 6px !important;
+                padding: 12px 0 !important;
+                color: #087e42 !important;
+                font-size: 14px !important;
+                font-weight: 700 !important;
+                text-decoration: none !important;
+                white-space: nowrap !important;
+                cursor: pointer !important;
+            }
+
+                .tb-header .tb-user-trigger:hover {
+                    color: #005c30 !important;
+                }
+
+            /* MENU MẶC ĐỊNH BỊ ẨN */
+
+            .tb-header .tb-user-menu .tb-user-dropdown {
+                display: none !important;
+                position: absolute !important;
+                top: 100% !important;
+                right: 0 !important;
+                left: auto !important;
+                width: 230px !important;
+                min-width: 230px !important;
+                padding: 8px 0 !important;
+                margin: 0 !important;
+                background: #ffffff !important;
+                border: 1px solid #e5e7eb !important;
+                border-radius: 10px !important;
+                box-shadow: 0 10px 25px rgba(0,0,0,0.15) !important;
+                z-index: 99999 !important;
+                visibility: hidden !important;
+                opacity: 0 !important;
+            }
+
+            /* CHỈ HIỆN KHI RÊ CHUỘT */
+
+            .tb-header .tb-user-menu:hover .tb-user-dropdown,
+            .tb-header .tb-user-menu:focus-within .tb-user-dropdown {
+                display: block !important;
+                visibility: visible !important;
+                opacity: 1 !important;
+            }
+
+            /* CÁC MỤC TRONG DROPDOWN */
+
+            .tb-header .tb-user-dropdown a {
+                display: block !important;
+                width: 100% !important;
+                padding: 12px 16px !important;
+                margin: 0 !important;
+                color: #333333 !important;
+                font-size: 14px !important;
+                font-weight: 500 !important;
+                text-align: left !important;
+                text-decoration: none !important;
+                white-space: nowrap !important;
+                box-sizing: border-box !important;
+            }
+
+                .tb-header .tb-user-dropdown a:hover {
+                    background: #e9f7ef !important;
+                    color: #087e42 !important;
+                }
+
+            .tb-header .tb-user-dropdown .tb-user-logout {
+                color: #dc3545 !important;
+                border-top: 1px solid #eeeeee !important;
+            }
+
+                .tb-header .tb-user-dropdown .tb-user-logout:hover {
+                    background: #fff1f2 !important;
+                    color: #b91c1c !important;
+                }
+
+        /* ===== RESPONSIVE ===== */
+
+        @@media (max-width: 850px) {
+            .tb-header .tb-header-content {
+                flex-wrap: wrap !important;
+                justify-content: center !important;
+                gap: 10px !important;
+            }
+
+            .tb-header .tb-nav {
+                width: 100% !important;
+                flex-wrap: wrap !important;
+                justify-content: center !important;
+                gap: 12px !important;
+            }
+        }
+
+        @@media (max-width: 480px) {
+            .tb-header .tb-logo {
+                font-size: 27px !important;
+            }
+
+            .tb-header .tb-nav > a,
+            .tb-header .tb-user-trigger {
+                font-size: 13px !important;
+            }
+
+            .tb-header .tb-user-dropdown {
+                right: 0 !important;
+            }
         }
     </style>
 </head>
+
 <body>
-    <div class="navbar navbar-default navbar-fixed-top bg-light shadow-sm">
-        <!-- Thanh Banner Freeship -->
-        <header class="container-fluid py-1" style="background-color: #e8f5e9;">
-            <h6 style="text-align:center; color:#2e7d32; margin: 5px 0;">
-                Free ship đơn từ 40k, giảm nhiều hơn cùng
-                <span style="font-weight:bolder; font-style: italic;"><span style="color: blue;">FREESHIP</span> XTRA</span>
-            </h6>
-        </header>
 
-        <div class="container">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse" title="more options">
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <!-- Logo trang web -->
-                <a href="@Url.Action("Index", "Home")" class="navbar-brand">
-                    <span style="font-weight: bold; color: #1E8A54; font-size: 24px;">FASTOR</span>
+    <!-- THANH KHUYẾN MÃI -->
+    <div class="tb-topbar">
+        🚚 Free ship đơn từ 40k,
+        giảm nhiều hơn cùng
+        <strong>FREESHIP XTRA</strong>
+    </div>
+
+    <!-- HEADER -->
+    <header class="tb-header">
+        <div class="tb-container tb-header-content">
+
+            <!-- LOGO -->
+            <a class="tb-logo"
+               href="@Url.Action("Index", "Home", new { area = "" })">
+                ThegioiBook
+            </a>
+
+            <!-- MENU -->
+            <nav class="tb-nav">
+
+                <!-- TRANG CHỦ -->
+                <a href="@Url.Action("Index", "Home", new { area = "" })">
+                    🏠 Trang chủ
                 </a>
-            </div>
 
-            <div class="navbar-collapse collapse navbar-right">
-                <ul class="nav navbar-nav">
-                    <!-- Trang chủ -->
-                    <li>
-                        <div>
-                            <i class="fas fa-home"></i>
-                            @Html.ActionLink("Trang chủ", "Index", "Home", new { area = "" }, null)
-                        </div>
-                    </li>
+                <!-- ĐƠN HÀNG -->
+                <a href="@Url.Action("OrderHistory", "Order", new { area = "" })">
+                    📋 Đơn hàng
+                </a>
 
-                    <!-- Menu Tài khoản (Dropdown) -->
-                    <li class="dropdown">
-                        <div style="position:relative;">
-                            <i class="fas fa-user"></i>
-                            <a href="javascript:void(0)" id="account-name">
-                                @if (ViewBag.pmmodel.IsLoggedIn)
-                                {
-                                    <text>Hello, </text>@ViewBag.pmmodel.Username
-                                }
-                                else
-                                {
-                                    <text>Tài khoản</text>
-                                }
+                <!-- TÀI KHOẢN -->
+                @if (isLoggedIn)
+                {
+                    <div class="tb-user-menu">
+
+                        <a class="tb-user-trigger"
+                           href="@Url.Action("ProfileInfo", "Account", new { area = "" })">
+                            👤 @username ▾
+                        </a>
+
+                        <div class="tb-user-dropdown">
+
+                            <a href="@Url.Action("ProfileInfo", "Account", new { area = "" })">
+                                👤 Thông tin tài khoản
                             </a>
-                            <div class="dropdown-content">
-                                @if (ViewBag.pmmodel.IsLoggedIn)
-                                {
-                                    <a href="@Url.Action("Profile", "Account")">Thông tin tài khoản</a>
-                                    <a href="@Url.Action("MyOrder", "Order")">Lịch sử mua hàng</a>
-                                    <a href="@Url.Action("Logout", "Account")">Đăng xuất</a>
-                                }
-                                else
-                                {
-                                    <a href="@Url.Action("Register", "Account")">Đăng ký</a>
-                                    <a href="@Url.Action("Login", "Account")">Đăng nhập</a>
-                                }
-                            </div>
-                        </div>
-                    </li>
 
-                    <!-- Giỏ hàng kèm số lượng -->
-                    <li>
-                        <div>
-                            <a href="@Url.Action("Index2", "Cart")" style="text-decoration: none;">
-                                <i class="fas fa-shopping-cart"></i> Giỏ hàng
-                                (<span id="cart-count" style="color: red; font-weight: bold;">@ViewBag.pmmodel.CartCount</span>)
+                            <a href="@Url.Action("ChangePassword", "Account", new { area = "" })">
+                                🔒 Đổi mật khẩu
                             </a>
+
+                            <a class="tb-user-logout"
+                               href="@Url.Action("Logout", "Account", new { area = "" })">
+                                🚪 Đăng xuất
+                            </a>
+
                         </div>
-                    </li>
-                </ul>
-            </div>
+
+                    </div>
+                }
+                else
+                {
+                    <a href="@Url.Action("Login", "Account", new { area = "" })">
+                        👤 Tài khoản
+                    </a>
+                }
+
+                <!-- GIỎ HÀNG -->
+                <a href="@Url.Action("Index2", "Cart", new { area = "" })">
+                    🛒 Giỏ hàng
+                    <span class="tb-cart-count">(@cartCount)</span>
+                </a>
+
+                <!-- QUẢN TRỊ -->
+                @if (isAdmin)
+                {
+                    <a href="@Url.Action("Index", "Home", new { area = "Admin" })">
+                        ⚙ Quản trị
+                    </a>
+                }
+
+            </nav>
+
         </div>
+    </header>
+
+    <!-- DANH MỤC SẢN PHẨM -->
+    <div class="tb-container tb-category-wrapper">
+
+        <div class="tb-dropdown">
+
+            <button type="button"
+                    class="tb-category-button"
+                    id="tbCategoryButton"
+                    aria-expanded="false"
+                    aria-controls="tbCategoryMenu">
+                ☰ Danh mục sản phẩm ▾
+            </button>
+
+            <div class="tb-category-menu"
+                 id="tbCategoryMenu">
+
+                <a href="@Url.Action("ProductList", "Home", new { area = "" })">
+                    📚 Tất cả sản phẩm
+                </a>
+
+                @foreach (var category in categories)
+                {
+                    <a href="@Url.Action("ProductList", "Home",
+                        new
+                        {
+                            area = "",
+                            categoryId = category.CategoryID
+                        })">
+                        📖 @category.CategoryName
+                    </a>
+                }
+
+            </div>
+
+        </div>
+
     </div>
 
-    <!-- Nội dung chính của trang -->
-    <div class="container body-content" style="margin-top: 80px;">
+    <!-- NỘI DUNG -->
+    <main class="tb-container tb-main">
         @RenderBody()
-        <hr />
-        <footer class="text-center py-4">
-            <p>&copy; @DateTime.Now.Year - My Store E-commerce</p>
-            <p class="text-muted" style="font-size: 13px;">Contact: Tên các thành viên trong nhóm</p>
-        </footer>
-    </div>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="tb-footer">
+
+        <div class="tb-container">
+
+            <h3>ThegioiBook</h3>
+
+            <p>
+                Khám phá tri thức qua từng trang sách.
+            </p>
+
+            <p>
+                © @DateTime.Now.Year ThegioiBook.
+                All rights reserved.
+            </p>
+
+        </div>
+
+    </footer>
 
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
+
+    <!-- SCRIPT DANH MỤC -->
+    <script>
+        (function () {
+
+            var button = document.getElementById("tbCategoryButton");
+            var menu = document.getElementById("tbCategoryMenu");
+
+            if (!button || !menu) return;
+
+            button.addEventListener("click", function () {
+
+                var isOpen = menu.classList.toggle("tb-show");
+
+                button.setAttribute("aria-expanded", isOpen);
+            });
+
+            document.addEventListener("click", function (event) {
+
+                if (!button.contains(event.target) &&
+                    !menu.contains(event.target)) {
+
+                    menu.classList.remove("tb-show");
+
+                    button.setAttribute("aria-expanded", "false");
+                }
+            });
+
+            document.addEventListener("keydown", function (event) {
+
+                if (event.key === "Escape") {
+
+                    menu.classList.remove("tb-show");
+
+                    button.setAttribute("aria-expanded", "false");
+                }
+            });
+
+        })();
+    </script>
+
     @RenderSection("scripts", required: false)
+
 </body>
 </html>
