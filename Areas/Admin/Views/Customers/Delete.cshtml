@@ -1,0 +1,52 @@
+﻿@model Be_25dh110275_NguyenHoangAnh.Models.Customer
+
+@{
+    ViewBag.Title = "Xóa khách hàng";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<style>
+    .page-title-admin {
+        background-color: #1E8A54 !important;
+        color: #000000 !important;
+        padding: 10px 15px;
+        font-weight: bold;
+        font-size: 22px;
+        width: 100%;
+        margin-bottom: 20px;
+        box-sizing: border-box;
+    }
+</style>
+
+<div class="page-title-admin">
+    XÓA KHÁCH HÀNG
+</div>
+
+<h4 class="alert alert-danger">Bạn thực sự muốn xóa khách hàng này không?</h4>
+
+<div>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>Họ tên:</dt>
+        <dd>@Html.DisplayFor(model => model.CustomerName)</dd>
+
+        <dt>Email:</dt>
+        <dd>@Html.DisplayFor(model => model.CustomerEmail)</dd>
+
+        <dt>Số điện thoại:</dt>
+        <dd>@Html.DisplayFor(model => model.CustomerPhone)</dd>
+
+        <dt>Địa chỉ:</dt>
+        <dd>@Html.DisplayFor(model => model.CustomerAddress)</dd>
+    </dl>
+</div>
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color mt-3">
+            <input type="submit" value="Xóa" class="btn btn-danger" />
+            @Html.ActionLink("Quay lại danh sách", "Index", null, new { @class = "btn btn-secondary ms-2" })
+        </div>
+    }
+    }

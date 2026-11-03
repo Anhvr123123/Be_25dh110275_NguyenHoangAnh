@@ -1,0 +1,57 @@
+﻿@{
+    ViewBag.Title = "Trang quản trị Admin";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="container-fluid mt-4">
+    <h2 class="mb-4">Bảng điều khiển (Dashboard)</h2>
+
+    <div class="row">
+        <!-- Thẻ thống kê Đơn hàng -->
+        <div class="col-md-3 mb-3">
+            <div class="card text-white bg-primary shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">Đơn hàng</h5>
+                    <h3>@ViewBag.TotalOrders</h3>
+                    <p class="card-text">Tổng số đơn hàng</p>
+                    <a href="@Url.Action("Index", "Orders", new { area = "Admin" })" class="text-white text-decoration-underline">Xem chi tiết &rarr;</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Thẻ thống kê Sản phẩm -->
+        <div class="col-md-3 mb-3">
+            <div class="card text-white bg-success shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">Sản phẩm</h5>
+                    <h3>@ViewBag.TotalProducts</h3>
+                    <p class="card-text">Tổng số sản phẩm</p>
+                    <a href="@Url.Action("Index", "Products", new { area = "Admin" })" class="text-white text-decoration-underline">Xem chi tiết &rarr;</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Thẻ thống kê Khách hàng -->
+        <div class="col-md-3 mb-3">
+            <div class="card text-white bg-warning shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">Khách hàng</h5>
+                    <h3>@ViewBag.TotalCustomers</h3>
+                    <p class="card-text">Tổng số khách hàng</p>
+                    <a href="@Url.Action("Index", "Customers", new { area = "Admin" })" class="text-white text-decoration-underline">Xem chi tiết &rarr;</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Thẻ thống kê Danh mục -->
+        <div class="col-md-3 mb-3">
+            <div class="card text-white bg-danger shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">Danh mục</h5>
+                    <h3>@ViewBag.TotalCategories</h3>
+                    <p class="card-text">Tổng số danh mục</p>
+                    <a href="@Url.Action("Index", "Categories", new { area = "Admin" })">Danh mục</a>                </div>
+            </div>
+        </div>
+    </div>
+</div>

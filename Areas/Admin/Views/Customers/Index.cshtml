@@ -1,0 +1,65 @@
+﻿@model IEnumerable<Be_25dh110275_NguyenHoangAnh.Models.Customer>
+
+@{
+    ViewBag.Title = "Danh sách khách hàng";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<style>
+    .page-title-admin {
+        background-color: #1E8A54 !important;
+        color: #000000 !important;
+        padding: 10px 15px;
+        font-weight: bold;
+        font-size: 22px;
+        width: 100%;
+        margin-bottom: 20px;
+        box-sizing: border-box;
+    }
+</style>
+
+<div class="page-title-admin">
+    QUẢN LÝ KHÁCH HÀNG
+</div>
+
+<p>
+    @Html.ActionLink("Thêm mới khách hàng", "Create", null, new { @class = "btn btn-success mb-3" })
+</p>
+
+@using (Html.BeginForm("Index", "Customers", FormMethod.Get))
+{
+    <div class="input-group mb-3" style="max-width: 400px;">
+        @Html.TextBox("searchTerm", ViewBag.SearchTerm as string, new { @class = "form-control", placeholder = "Tìm theo tên hoặc email..." })
+        <button class="btn btn-primary" type="submit">Tìm kiếm</button>
+    </div>
+}
+
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr style="background-color: #f8f9fa;">
+            <th>Tên đăng nhập</th>
+            <th>Họ tên</th>
+            <th>Email</th>
+            <th>Số điện thoại</th>
+            <th>Địa chỉ</th>
+            <th class="text-center">Thao tác</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td><strong>@Html.DisplayFor(modelItem => item.Username)</strong></td>
+                <td>@Html.DisplayFor(modelItem => item.CustomerName)</td>
+                <td>@Html.DisplayFor(modelItem => item.CustomerEmail)</td>
+                <td>@Html.DisplayFor(modelItem => item.CustomerPhone)</td>
+                <td>@Html.DisplayFor(modelItem => item.CustomerAddress)</td>
+                <td class="text-center">
+                    @Html.ActionLink("Sửa", "Edit", new { id = item.CustomerID }, new { @class = "btn btn-sm btn-warning" })
+                    @Html.ActionLink("Chi tiết", "Details", new { id = item.CustomerID }, new { @class = "btn btn-sm btn-info ms-1" })
+                    @Html.ActionLink("Xóa", "Delete", new { id = item.CustomerID }, new { @class = "btn btn-sm btn-danger ms-1" })
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

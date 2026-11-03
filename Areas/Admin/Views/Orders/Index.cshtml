@@ -1,0 +1,50 @@
+﻿@model IEnumerable<Be_25dh110275_NguyenHoangAnh.Models.Order>
+
+@{
+    ViewBag.Title = "Quản lý đơn hàng";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<style>
+    .page-title-admin {
+        background-color: #1E8A54 !important;
+        color: #ffffff !important;
+        padding: 10px 15px;
+        font-weight: bold;
+        font-size: 22px;
+        width: 100%;
+        margin-bottom: 20px;
+        box-sizing: border-box;
+    }
+</style>
+
+<div class="page-title-admin">
+    ĐƠN HÀNG
+</div>
+<hr />
+
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>Mã đơn hàng</th>
+            <th>Ngày đặt</th>
+            <th>Trạng thái thanh toán</th>
+            <th>Địa chỉ giao hàng</th>
+            <th>Thao tác</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>#@item.OrderID</td>
+                <td>@item.OrderDate.ToString("dd/MM/yyyy HH:mm")</td>
+                <td>@item.PaymentStatus</td>
+                <td>@item.AddressDelivery</td>
+                <td>
+                    @Html.ActionLink("Chi tiết", "Details", new { id = item.OrderID }, new { @class = "btn btn-info btn-sm" })
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

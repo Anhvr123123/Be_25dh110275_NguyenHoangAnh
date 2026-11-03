@@ -1,0 +1,73 @@
+﻿@model Be_25dh110275_NguyenHoangAnh.Models.Order
+
+@{
+    ViewBag.Title = "Chi tiết đơn hàng #" + Model.OrderID;
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="container" style="margin-top: 20px;">
+    <h2>Chi tiết đơn hàng #@Model.OrderID</h2>
+    <hr />
+
+    <div class="card p-4 shadow-sm mb-4" style="background-color: #f8f9fa;">
+        <h4>Thông tin chung</h4>
+        <dl class="row mt-3">
+            <dt class="col-sm-3">Mã đơn hàng:</dt>
+            <dd class="col-sm-9">#@Model.OrderID</dd>
+
+            <dt class="col-sm-3">Ngày đặt hàng:</dt>
+            <dd class="col-sm-9">@Model.OrderDate.ToString("dd/MM/yyyy HH:mm")</dd>
+
+            <dt class="col-sm-3">Trạng thái thanh toán:</dt>
+            <dd class="col-sm-9">
+                <span class="badge bg-warning text-dark" style="padding: 6px 12px; font-size: 14px;">@Model.PaymentStatus</span>
+            </dd>
+
+            <dt class="col-sm-3">Địa chỉ giao hàng:</dt>
+            <dd class="col-sm-9"><strong>@Model.AddressDelivery</strong></dd>
+        </dl>
+    </div>
+
+    <h4>Sản phẩm trong đơn hàng</h4>
+    <table class="table table-bordered table-striped mt-3">
+        <thead>
+            <tr>
+                <th>Tên sản phẩm</th>
+                <th>Hình ảnh</th>
+                <th>Số lượng</th>
+                <th>Đơn giá</th>
+                <th>Thành tiền</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.OrderDetails != null && Model.OrderDetails.Any())
+            {
+                foreach (var detail in Model.OrderDetails)
+                {
+                    <tr>
+                        <td>@(detail.Product != null ? detail.Product.ProductName : "Sản phẩm không tồn tại")</td>
+                        <td>
+                            @if (detail.Product != null && !string.IsNullOrEmpty(detail.Product.ProductImage))
+                            {
+                                <img src="@detail.Product.ProductImage" alt="" style="width: 50px; height: 50px; object-fit: cover;" />
+                            }
+                        </td>
+                        <td>@detail.Quantity</td>
+                        <td>@(detail.UnitPrice.ToString("N0")) đ</td>
+                        <td>@((detail.Quantity * detail.UnitPrice).ToString("N0")) đ</td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="5" class="text-center">Không có sản phẩm nào trong đơn hàng này.</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <div class="mt-4">
+        @Html.ActionLink("Quay lại danh sách", "Index", null, new { @class = "btn btn-secondary" })
+    </div>
+</div>

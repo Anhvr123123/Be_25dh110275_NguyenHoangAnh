@@ -18,12 +18,12 @@
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">@Html.ActionLink("Home", "Index", "Home", new { }, new { @class = "nav-link" })</li>
-                    <li class="nav-item">@Html.ActionLink("Danh Mục", "Index", "Categories", new { }, new { @class = "nav-link" })</li>
-                    <li class="nav-item">@Html.ActionLink("Sản Phẩm", "Index", "Products", new { }, new { @class = "nav-link" })</li>
-                    <li class="nav-item">@Html.ActionLink("Khách Hàng", "Index", "Customers", new { }, new { @class = "nav-link" })</li>
-                    <li class="nav-item">@Html.ActionLink("Đơn Hàng", "Index", "Orders", new { }, new { @class = "nav-link" })</li>
-                    <li class="nav-item">@Html.ActionLink("Tài Khoản", "Index", "Users", new { }, new { @class = "nav-link" })</li>
+                    <li class="nav-item">@Html.ActionLink("Home", "Index", "Home", new { area = "Admin" }, new { @class = "nav-link" })</li>
+                    <li class="nav-item">@Html.ActionLink("Danh Mục", "Index", "Categories", new { area = "Admin" }, new { @class = "nav-link" })</li>
+                    <li class="nav-item">@Html.ActionLink("Sản Phẩm", "Index", "Products", new { area = "Admin" }, new { @class = "nav-link" })</li>
+                    <li class="nav-item">@Html.ActionLink("Khách Hàng", "Index", "Customers", new { area = "Admin" }, new { @class = "nav-link" })</li>
+                    <li class="nav-item">@Html.ActionLink("Đơn Hàng", "Index", "Orders", new { area = "Admin" }, new { @class = "nav-link" })</li>
+                    <li class="nav-item">@Html.ActionLink("Tài Khoản", "Index", "Users", new { area = "Admin" }, new { @class = "nav-link" })</li>
                 </ul>
             </div>
         </div>

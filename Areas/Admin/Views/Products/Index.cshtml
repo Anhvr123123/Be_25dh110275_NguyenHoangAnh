@@ -1,4 +1,5 @@
 ﻿@model Be_25dh110275_NguyenHoangAnh.Models.ViewModel.ProductSearchVM
+@using PagedList.Mvc;
 
 @{
     ViewBag.Title = "Index";
@@ -45,16 +46,15 @@
             gap: 10px;
         }
 
-            .page-title-admin {
-                    background-color: #1E8A54 !important;
-                    color: #000000 !important;
-                    padding: 10px 15px;
-                    font-weight: bold;
-                    font-size: 22px;
-                    width: 100%;
-                    margin-bottom: 20px;
-                    box-sizing: border-box;
-
+        .page-title-admin {
+            background-color: #1E8A54 !important;
+            color: #000000 !important;
+            padding: 10px 15px;
+            font-weight: bold;
+            font-size: 22px;
+            width: 100%;
+            margin-bottom: 20px;
+            box-sizing: border-box;
         }
     </style>
 </head>
@@ -68,7 +68,7 @@
         <div class="filter-form">
             <div class="filter-group">
                 <label>Tên sản phẩm</label>
-                @Html.TextBox("SearchTerm", null, new { @class = "form-control", placeholder = "Nhập tên sản phẩm..." })
+                @Html.TextBox("SearchTerm", Model.SearchTerm, new { @class = "form-control", placeholder = "Nhập tên sản phẩm..." })
             </div>
 
             <div class="filter-group">
@@ -102,7 +102,7 @@
         </div>
     }
 
-    @* Gọi Partial View truyền vào danh sách sản phẩm từ ViewModel *@
-    @Html.Partial("PVListProduct", Model.Products)
+    @* Gọi Partial View và truyền nguyên đối tượng Model vào để đảm bảo hiển thị đủ bảng và phân trang *@
+    @Html.Partial("PVListProduct", Model)
 </body>
 </html>

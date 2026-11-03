@@ -1,0 +1,41 @@
+﻿@model IEnumerable<Be_25dh110275_NguyenHoangAnh.Models.Product>
+@{
+    ViewBag.Title = "Quản lý sản phẩm";
+    Layout = "~/Views/Shared/_CustomerLayout.cshtml";}
+<h2>Quản lý sản phẩm</h2>
+<p>
+    @Html.ActionLink("Thêm mới sản phẩm", "Create", null, new { @class = "btn btn-primary" })
+</p>
+<table class="table table-bordered table-striped">
+    <tr>
+        <th>Hình ảnh</th>
+        <th>Tên sản phẩm</th>
+        <th>Giá</th>
+        <th>Danh mục</th>
+        <th>Thao tác</th>
+        @foreach (var item in Model)
+        {
+        <tr>
+            <td>
+                @* Sửa Image thành ProductImage *@
+                <img src="~/Content/images/@item.ProductImage" width="50" height="50" style="object-fit:cover;" />
+            </td>
+            <td>
+                @* Sửa Name thành ProductName *@
+                @item.ProductName
+            </td>
+            <td>
+                @* Sửa Price thành ProductPrice *@
+                @String.Format("{0:N0} đ", item.ProductPrice)
+            </td>
+            <td>
+                @* Sửa Category.Name thành tên thuộc tính của Category (hoặc Category.CategoryName tùy theo bảng Category trên sơ đồ) *@
+                @(item.Category != null ? item.Category.CategoryName : "Chưa phân loại")
+            </td>
+            <td>
+                @Html.ActionLink("Sửa", "Edit", new { id = item.ProductID }, new { @class = "btn btn-warning btn-sm" }) |
+                @Html.ActionLink("Xóa", "Delete", new { id = item.ProductID }, new { @class = "btn btn-danger btn-sm" })
+            </td>
+        </tr>
+    }
+    </table>

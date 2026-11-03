@@ -1,33 +1,86 @@
-﻿@{
-    ViewBag.Title = "Home Page";
-}
+﻿@model Be_25dh110275_NguyenHoangAnh.Models.ViewModel.HomeProductVM
+@using PagedList.Mvc;
 
-<main>
-    <section class="row" aria-labelledby="aspnetTitle">
-        <h1 id="title">ASP.NET</h1>
-        <p class="lead">ASP.NET is a free web framework for building great Web sites and Web applications using HTML, CSS and JavaScript.</p>
-        <p><a href="https://asp.net" class="btn btn-primary btn-md">Learn more &raquo;</a></p>
-    </section>
+@{
+    ViewBag.Title = "Trang Chủ - MyStore";
+    Layout = "~/Views/Shared/_CustomerLayout.cshtml";}
 
-    <div class="row">
-        <section class="col-md-4" aria-labelledby="gettingStartedTitle">
-            <h2 id="gettingStartedTitle">Getting started</h2>
-            <p>
-                ASP.NET MVC gives you a powerful, patterns-based way to build dynamic websites that
-                enables a clean separation of concerns and gives you full control over markup
-                for enjoyable, agile development.
-            </p>
-            <p><a class="btn btn-outline-dark" href="https://go.microsoft.com/fwlink/?LinkId=301865">Learn more &raquo;</a></p>
-        </section>
-        <section class="col-md-4" aria-labelledby="librariesTitle">
-            <h2 id="librariesTitle">Get more libraries</h2>
-            <p>NuGet is a free Visual Studio extension that makes it easy to add, remove, and update libraries and tools in Visual Studio projects.</p>
-            <p><a class="btn btn-outline-dark" href="https://go.microsoft.com/fwlink/?LinkId=301866">Learn more &raquo;</a></p>
-        </section>
-        <section class="col-md-4" aria-labelledby="hostingTitle">
-            <h2 id="hostingTitle">Web Hosting</h2>
-            <p>You can easily find a web hosting company that offers the right mix of features and price for your applications.</p>
-            <p><a class="btn btn-outline-dark" href="https://go.microsoft.com/fwlink/?LinkId=301867">Learn more &raquo;</a></p>
-        </section>
+<div class="container mt-4">
+    <!-- Thanh tìm kiếm sản phẩm -->
+    <div class="row mb-4">
+        <div class="col-md-6 offset-md-3">
+            @using (Html.BeginForm("Index", "Home", FormMethod.Get))
+            {
+                <div class="input-group">
+                    @Html.TextBox("searchTerm", Model.SearchTerm, new { @class = "form-control", @placeholder = "Nhập tên sản phẩm, mô tả hoặc danh mục cần tìm..." })
+                    <button class="btn btn-primary" type="submit"><i class="fa fa-search"></i> Tìm kiếm</button>
+                </div>
+            }
+        </div>
     </div>
-</main>
+
+    <!-- Banner / Tiêu đề -->
+    <div class="jumbotron bg-light p-4 rounded mb-4 text-center">
+        <h1 class="display-5">Chào mừng đến với MyStore!</h1>
+        <p class="lead">Khám phá các sản phẩm chất lượng cao và xu hướng mới nhất tại cửa hàng của chúng tôi.</p>
+    </div>
+
+    <!-- 1. Danh sách sản phẩm nổi bật (Top 10 bán chạy) -->
+    <div class="mb-5">
+        <h3 class="border-bottom pb-2 mb-3 text-danger"><i class="fa fa-fire"></i> Sản phẩm nổi bật</h3>
+        <div class="row">
+            @if (Model.FeaturedProducts != null && Model.FeaturedProducts.Any())
+            {
+                foreach (var product in Model.FeaturedProducts)
+                {
+                    <div class="col-md-3 mb-4">
+                        <div class="card h-100 shadow-sm">
+                            <img src="~/Content/images/@product.ProductImage" class="card-img-top" alt="@product.ProductName" style="height: 200px; object-fit: cover;" onerror="this.src='https://via.placeholder.com/200'" />
+                            <div class="card-body d-flex flex-column">
+                                <h5 class="card-title">@product.ProductName</h5>
+                                <p class="card-text text-danger font-weight-bold">@string.Format("{0:N0} đ", product.ProductPrice)</p>
+                                <a href="@Url.Action("Details", "Products", new { id = product.ProductID })" class="btn btn-outline-primary mt-auto">Xem chi tiết</a>
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+            else
+            {
+                <p class="text-muted text-center w-100">Chưa có sản phẩm nổi bật nào.</p>
+            }
+        </div>
+    </div>
+
+    <!-- 2. Danh sách sản phẩm mới (Có phân trang PagedList) -->
+    <div class="mb-5">
+        <h3 class="border-bottom pb-2 mb-3 text-primary"><i class="fa fa-star"></i> Sản phẩm mới</h3>
+        <div class="row">
+            @if (Model.NewProducts != null && Model.NewProducts.Any())
+            {
+                foreach (var product in Model.NewProducts)
+                {
+                    <div class="col-md-4 mb-4">
+                        <div class="card h-100 shadow-sm">
+                            <img src="~/Content/images/@product.ProductImage" class="card-img-top" alt="@product.ProductName" style="height: 220px; object-fit: cover;" onerror="this.src='https://via.placeholder.com/200'" />
+                            <div class="card-body d-flex flex-column">
+                                <h5 class="card-title">@product.ProductName</h5>
+                                <p class="card-text text-danger font-weight-bold">@string.Format("{0:N0} đ", product.ProductPrice)</p>
+                                <a href="@Url.Action("Details", "Products", new { id = product.ProductID })" class="btn btn-primary mt-auto">Mua ngay / Chi tiết</a>
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+            else
+            {
+                <p class="text-muted text-center w-100">Không tìm thấy sản phẩm phù hợp.</p>
+            }
+        </div>
+
+        <!-- Thanh phân trang PagedList -->
+        <div class="d-flex justify-content-center mt-4">
+            @Html.PagedListPager(Model.NewProducts, page => Url.Action("Index", new { page, searchTerm = Model.SearchTerm }), new PagedListRenderOptions { Display = PagedListDisplayMode.IfNeeded })
+        </div>
+    </div>
+</div>

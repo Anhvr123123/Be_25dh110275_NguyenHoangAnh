@@ -23,24 +23,22 @@
 </div>
 
 <div class="container-fluid" style="margin-top: 20px;">
-    <div class="container-fluid" style="margin-top: 20px;">
-        <div>
-            <dl class="dl-horizontal">
-                <dt>Mã danh mục:</dt>
-                <dd>
-                    @Html.TextBox("CategoryID", Model.CategoryID, new { @class = "form-control", @readonly = "readonly", style = "max-width: 300px;" })
-                </dd>
+    <div>
+        <dl class="dl-horizontal">
+            <dt>Mã danh mục:</dt>
+            <dd>
+                @Html.TextBox("CategoryID", Model.CategoryID, new { @class = "form-control", @readonly = "readonly", style = "max-width: 300px;" })
+            </dd>
 
-                <dt style="font-weight: bold;">Tên danh mục:</dt>
-                <dd>
-                    @Html.TextBox("CategoryName", Model.CategoryName, new { @class = "form-control", @readonly = "readonly", style = "max-width: 300px;" })
-                </dd>
-            </dl>
-        </div>
-
-        <p style="margin-top: 20px; display: flex; gap: 10px;">
-            @Html.ActionLink("CHỈNH SỬA", "Edit", new { id = Model.CategoryID }, new { @class = "btn btn-primary" })
-            @Html.ActionLink("QUAY LẠI DANH SÁCH", "Index", null, new { @class = "btn btn-primary" })
-        </p>
+            <dt style="font-weight: bold;">Tên danh mục:</dt>
+            <dd>
+                @Html.TextBox("CategoryName", Model.CategoryName, new { @class = "form-control", @readonly = "readonly", style = "max-width: 300px;" })
+            </dd>
+        </dl>
     </div>
+
+    <p style="margin-top: 20px; display: flex; gap: 10px;">
+        @Html.ActionLink("CHỈNH SỬA", "Edit", new { id = Model.CategoryID }, new { @class = "btn btn-primary" })
+        @Html.ActionLink("QUAY LẠI DANH SÁCH", "Index", null, new { @class = "btn btn-primary" })
+    </p>
 </div>

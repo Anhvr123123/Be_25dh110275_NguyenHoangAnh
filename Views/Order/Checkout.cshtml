@@ -1,0 +1,68 @@
+﻿@model Be_25dh110275_NguyenHoangAnh.Models.ViewModel.CheckoutVM
+
+@{
+    ViewBag.Title = "Thanh toán đơn hàng - MyStore";
+    Layout = "~/Views/Shared/_CustomerLayout.cshtml";}
+
+<div class="container mt-4">
+    <h2 class="mb-4"><i class="fa fa-credit-card"></i> Thông Tin Thanh Toán</h2>
+
+    @using (Html.BeginForm("Checkout", "Order", FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+        <div class="row">
+            <!-- Cột trái: Form nhập thông tin khách hàng -->
+            <div class="col-md-7">
+                <div class="card p-4 shadow-sm mb-4">
+                    <h4 class="mb-3 text-primary">Thông tin giao hàng</h4>
+
+                    <div class="form-group mb-3">
+                        <label>Họ tên người nhận:</label>
+                        @Html.TextBoxFor(m => m.CustomerName, new { @class = "form-control", @required = "required", @placeholder = "Nhập họ tên đầy đủ" })
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label>Số điện thoại:</label>
+                        @Html.TextBoxFor(m => m.CustomerPhone, new { @class = "form-control", @required = "required", @placeholder = "Nhập số điện thoại liên hệ" })
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label>Email:</label>
+                        @Html.TextBoxFor(m => m.CustomerEmail, new { @class = "form-control", @type = "email", @placeholder = "Nhập địa chỉ email nhận hóa đơn" })
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label>Địa chỉ giao hàng chi tiết:</label>
+                        @Html.TextAreaFor(m => m.CustomerAddress, new { @class = "form-control", @rows = "3", @required = "required", @placeholder = "Số nhà, tên đường, phường/xã, quận/huyện..." })
+                    </div>
+                </div>
+            </div>
+
+            <!-- Cột phải: Tóm tắt đơn hàng -->
+            <div class="col-md-5">
+                <div class="card p-4 shadow-sm bg-light">
+                    <h4 class="mb-3 text-secondary">Đơn hàng của bạn</h4>
+                    <ul class="list-group mb-3">
+                        @foreach (var item in Model.CartItems)
+                        {
+                            <li class="list-group-item d-flex justify-content-between lh-condensed">
+                                <div>
+                                    <h6 class="my-0">@item.ProductName</h6>
+                                    <small class="text-muted">SL: @item.Quantity</small>
+                                </div>
+                                <span class="text-muted">@string.Format("{0:N0} đ", item.TotalPrice)</span>
+                            </li>
+                        }
+                        <li class="list-group-item d-flex justify-content-between bg-white">
+                            <span class="font-weight-bold">Tổng cộng:</span>
+                            <strong class="text-danger">@string.Format("{0:N0} đ", Model.TotalAmount)</strong>
+                        </li>
+                    </ul>
+
+                    <button type="submit" class="btn btn-success btn-lg btn-block"><i class="fa fa-check"></i> Xác nhận đặt hàng</button>
+                    <a href="@Url.Action("Index", "Cart")" class="btn btn-outline-secondary btn-block mt-2">Quay lại giỏ hàng</a>
+                </div>
+            </div>
+        </div>
+    }
+</div>

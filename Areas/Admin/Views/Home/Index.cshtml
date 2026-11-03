@@ -1,25 +1,107 @@
-﻿
-@{
-    ViewBag.Title = "Index";
+﻿@{
+    ViewBag.Title = "Trang chủ Quản trị";
     Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
 }
 
 <style>
-        .page-title-admin {
-                background-color: #1E8A54 !important;
-                color: #000000 !important;
-                padding: 10px 15px;
-                font-weight: bold;
-                font-size: 22px;
-                width: 100%;
-                margin-bottom: 20px;
-                box-sizing: border-box;
-
+    .page-title-admin {
+        background-color: #1E8A54 !important;
+        color: #000000 !important;
+        padding: 10px 15px;
+        font-weight: bold;
+        font-size: 22px;
+        width: 100%;
+        margin-bottom: 20px;
+        box-sizing: border-box;
     }
+
+    .admin-welcome-box {
+        background-color: #f8f9fa;
+        border-left: 5px solid #1E8A54;
+        padding: 20px;
+        margin-bottom: 25px;
+        border-radius: 4px;
+    }
+
+    .stat-card {
+        border-left: 5px solid #1E8A54;
+        transition: transform 0.2s;
+    }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
 </style>
 
 <div class="page-title-admin">
-    TRANG QUẢNG TRỊ
+    TRANG QUẢN TRỊ HỆ THỐNG
 </div>
 
+<!-- Lời chào mừng -->
+<div class="admin-welcome-box shadow-sm">
+    <h4>Xin chào, Quản trị viên!</h4>
+    <p class="mb-0 text-muted">Chào mừng bạn trở lại với hệ thống quản lý My Store. Dưới đây là tóm tắt nhanh tình hình hoạt động của website.</p>
+</div>
 
+<!-- Thống kê nhanh (Dashboard Widgets) -->
+<div class="row">
+    <!-- Khách hàng -->
+    <div class="col-md-4 mb-4">
+        <div class="card stat-card shadow-sm h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Quản lý Khách hàng</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">@ViewBag.CustomerCount Khách hàng</div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-users fa-2x text-gray-300" style="color: #1E8A54;"></i>
+                    </div>
+                </div>
+                <div class="mt-3">
+                    @Html.ActionLink("Quản lý khách hàng", "Index", "Customers", new { area = "Admin" }, new { @class = "btn btn-sm btn-success" })
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Danh mục -->
+    <div class="col-md-4 mb-4">
+        <div class="card stat-card shadow-sm h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Quản lý Danh mục</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">@ViewBag.CategoryCount Danh mục</div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-list fa-2x text-gray-300" style="color: #1E8A54;"></i>
+                    </div>
+                </div>
+                <div class="mt-3">
+                    @Html.ActionLink("Quản lý danh mục", "Index", "Categories", new { area = "Admin" }, new { @class = "btn btn-sm btn-success" })
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sản phẩm -->
+    <div class="col-md-4 mb-4">
+        <div class="card stat-card shadow-sm h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Quản lý Sản phẩm</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">@ViewBag.ProductCount Sản phẩm</div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-box fa-2x text-gray-300" style="color: #1E8A54;"></i>
+                    </div>
+                </div>
+                <div class="mt-3">
+                    @Html.ActionLink("Quản lý sản phẩm", "Index", "Products", new { area = "Admin" }, new { @class = "btn btn-sm btn-success" })
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

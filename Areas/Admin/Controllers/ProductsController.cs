@@ -1,14 +1,14 @@
-﻿using System;
+﻿using Be_25dh110275_NguyenHoangAnh.Models;
+using Be_25dh110275_NguyenHoangAnh.Models.ViewModel;
+using PagedList;
+using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Data.Entity;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Web;
-using PagedList;
 using System.Web.Mvc;
-using Be_25dh110275_NguyenHoangAnh.Models;
-using Be_25dh110275_NguyenHoangAnh.Models.ViewModel;
 
 namespace Be_25dh110275_NguyenHoangAnh.Areas.Admin.Controllers
 {
@@ -17,44 +17,59 @@ namespace Be_25dh110275_NguyenHoangAnh.Areas.Admin.Controllers
         private MyStoreEntities db = new MyStoreEntities();
 
         // GET: Admin/Products
-        public ActionResult Index(string searchTerm, int? page)
+        public ActionResult Index(string searchTerm, decimal? minPrice, decimal? maxPrice, string sortOrder, int? page)
         {
-            int pageSize = 5; // Số lượng sản phẩm hiển thị trên 1 trang
-            int pageNumber = (page ?? 1);
-
-            var model = new ProductSearchVM();
             var products = db.Products.AsQueryable();
 
+            // 1. Tìm kiếm theo tên hoặc mô tả
             if (!string.IsNullOrEmpty(searchTerm))
             {
-                // Tìm kiếm sản phẩm dựa trên từ khóa
-                products = products.Where(p =>
-                    p.ProductName.Contains(searchTerm) ||
-                    p.ProductDecription.Contains(searchTerm) ||
-                    p.Category.CategoryName.Contains(searchTerm));
+                products = products.Where(p => p.ProductName.Contains(searchTerm) || p.ProductDecription.Contains(searchTerm));
             }
 
-            model.SearchTerm = searchTerm;
+            // 2. Lọc theo khoảng giá
+            if (minPrice.HasValue)
+            {
+                products = products.Where(p => p.ProductPrice >= minPrice.Value);
+            }
+            if (maxPrice.HasValue)
+            {
+                products = products.Where(p => p.ProductPrice <= maxPrice.Value);
+            }
 
-            // Sắp xếp theo ProductID trước khi gọi ToPagedList (Bắt buộc đối với IQueryable)
-            model.Products = products.OrderBy(p => p.ProductID).ToPagedList(pageNumber, pageSize);
+            // 3. Sắp xếp
+            switch (sortOrder)
+            {
+                case "price_asc":
+                    products = products.OrderBy(p => p.ProductPrice);
+                    break;
+                case "price_desc":
+                    products = products.OrderByDescending(p => p.ProductPrice);
+                    break;
+                case "name_asc":
+                    products = products.OrderBy(p => p.ProductName);
+                    break;
+                case "name_desc":
+                    products = products.OrderByDescending(p => p.ProductName);
+                    break;
+                default:
+                    products = products.OrderByDescending(p => p.ProductID); // Mặc định mới nhất lên đầu
+                    break;
+            }
+
+            int pageNumber = page ?? 1;
+            int pageSize = 10;
+
+            var model = new ProductSearchVM
+            {
+                SearchTerm = searchTerm,
+                MinPrice = minPrice,
+                MaxPrice = maxPrice,
+                SortOrder = sortOrder,
+                Products = products.ToPagedList(pageNumber, pageSize)
+            };
 
             return View(model);
-        }
-
-        // GET: Admin/Products/Details/5
-        public ActionResult Details(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Product product = db.Products.Find(id);
-            if (product == null)
-            {
-                return HttpNotFound();
-            }
-            return View(product);
         }
 
         // GET: Admin/Products/Create
@@ -65,14 +80,20 @@ namespace Be_25dh110275_NguyenHoangAnh.Areas.Admin.Controllers
         }
 
         // POST: Admin/Products/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "ProductID,CategoryID,ProductName,ProductDecription,ProductPrice,ProductImage")] Product product)
+        public ActionResult Create(Be_25dh110275_NguyenHoangAnh.Models.Product product, HttpPostedFileBase UploadImage)
         {
             if (ModelState.IsValid)
             {
+                if (UploadImage != null && UploadImage.ContentLength > 0)
+                {
+                    string fileName = Path.GetFileName(UploadImage.FileName);
+                    string path = Path.Combine(Server.MapPath("~/Images/products/"), fileName);
+                    UploadImage.SaveAs(path);
+                    product.ProductImage = fileName;
+                }
+
                 db.Products.Add(product);
                 db.SaveChanges();
                 return RedirectToAction("Index");
@@ -89,7 +110,7 @@ namespace Be_25dh110275_NguyenHoangAnh.Areas.Admin.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Product product = db.Products.Find(id);
+            Be_25dh110275_NguyenHoangAnh.Models.Product product = db.Products.Find(id);
             if (product == null)
             {
                 return HttpNotFound();
@@ -99,18 +120,31 @@ namespace Be_25dh110275_NguyenHoangAnh.Areas.Admin.Controllers
         }
 
         // POST: Admin/Products/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "ProductID,CategoryID,ProductName,ProductDecription,ProductPrice,ProductImage")] Product product)
+        public ActionResult Edit(Be_25dh110275_NguyenHoangAnh.Models.Product product, HttpPostedFileBase UploadImage)
         {
             if (ModelState.IsValid)
             {
                 db.Entry(product).State = EntityState.Modified;
+
+                if (UploadImage != null && UploadImage.ContentLength > 0)
+                {
+                    string fileName = Path.GetFileName(UploadImage.FileName);
+                    string path = Path.Combine(Server.MapPath("~/Images/products/"), fileName);
+                    UploadImage.SaveAs(path);
+                    product.ProductImage = fileName;
+                }
+                else
+                {
+                    // Nếu không chọn ảnh mới, giữ lại ảnh cũ (không cập nhật cột ProductImage vào DB)
+                    db.Entry(product).Property(x => x.ProductImage).IsModified = false;
+                }
+
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
+
             ViewBag.CategoryID = new SelectList(db.Categories, "CategoryID", "CategoryName", product.CategoryID);
             return View(product);
         }
@@ -122,7 +156,7 @@ namespace Be_25dh110275_NguyenHoangAnh.Areas.Admin.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Product product = db.Products.Find(id);
+            Be_25dh110275_NguyenHoangAnh.Models.Product product = db.Products.Find(id);
             if (product == null)
             {
                 return HttpNotFound();
@@ -135,47 +169,10 @@ namespace Be_25dh110275_NguyenHoangAnh.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            //// đã sửa 
-            ////Product product = db.Products.Find(id);
-            ////db.Products.Remove(product);
-            ////db.SaveChanges();
-            ////return RedirectToAction("Index");
-            //Product product = db.Products.Find(id);
-
-            //if (product == null)
-            //{
-            //    return HttpNotFound();
-            //}
-
-            //try
-            //{
-            //    db.Products.Remove(product);
-            //    db.SaveChanges();
-
-            //    return RedirectToAction("Index");
-            //}
-            //catch (System.Data.Entity.Infrastructure.DbUpdateException)
-            //{
-            //    return Content("Không thể xóa sản phẩm vì sản phẩm đang được dữ liệu khác tham chiếu trong database.");
-            //}
-            Product product = db.Products.Find(id);
-
-            if (product == null)
-            {
-                return HttpNotFound();
-            }
-
-            try
-            {
-                db.Products.Remove(product);
-                db.SaveChanges();
-
-                return RedirectToAction("Index");
-            }
-            catch (System.Data.Entity.Infrastructure.DbUpdateException)
-            {
-                return Content("Không thể xóa sản phẩm vì sản phẩm đang được dữ liệu khác tham chiếu trong database.");
-            }
+            Be_25dh110275_NguyenHoangAnh.Models.Product product = db.Products.Find(id);
+            db.Products.Remove(product);
+            db.SaveChanges();
+            return RedirectToAction("Index");
         }
 
         protected override void Dispose(bool disposing)
