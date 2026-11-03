@@ -1,17 +1,18 @@
-﻿@model Be_25dh110275_NguyenHoangAnh.Models.ViewModel.RegisterVM
+﻿@model Be_25dh110275_NguyenHoangAnh.Models.Customer
 
 @{
     ViewBag.Title = "Thông tin tài khoản";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+    Layout = "~/Views/Shared/_CustomerLayout.cshtml";
 }
 
 <div class="container my-4">
     <h2>THÔNG TIN TÀI KHOẢN</h2>
     <hr />
 
-    @if (ViewBag.Message != null)
+    <!-- Sửa ViewBag.Message thành ViewBag.SuccessMessage cho khớp với Controller -->
+    @if (ViewBag.SuccessMessage != null)
     {
-        <div class="alert alert-success">@ViewBag.Message</div>
+        <div class="alert alert-success">@ViewBag.SuccessMessage</div>
     }
 
     @using (Html.BeginForm("ProfileInfo", "Account", FormMethod.Post, new { @class = "form-horizontal" }))

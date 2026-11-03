@@ -1,0 +1,94 @@
+﻿@model PagedList.IPagedList<Be_25dh110275_NguyenHoangAnh.Models.Product>
+@using PagedList.Mvc;
+
+@{
+    ViewBag.Title = ViewBag.CategoryName ?? "Danh sách sản phẩm";
+    Layout = "~/Views/Shared/_CustomerLayout.cshtml";
+}
+
+<div class="container mt-4">
+    <!-- Tiêu đề danh mục sản phẩm -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="text-primary fw-bold">
+            <i class="fa fa-cubes me-2"></i> @ViewBag.CategoryName
+        </h2>
+    </div>
+
+    @if (Model != null && Model.Any())
+    {
+        <div class="row">
+            @foreach (var product in Model)
+            {
+                <div class="col-md-3 mb-4">
+                    <div class="card h-100 shadow-sm border-0 product-card">
+                        <!-- Đường dẫn ảnh sản phẩm ngoài -->
+                        <a href="@Url.Action("Details", "Home", new { id = product.ProductID })">
+                            <img src="@(string.IsNullOrEmpty(product.ProductImage) ? "https://via.placeholder.com/200" : product.ProductImage)"
+                                 class="card-img-top bg-light p-3"
+                                 style="height: 200px; object-fit: contain;"
+                                 alt="@product.ProductName"
+                                 onerror="this.onerror=null;this.src='https://via.placeholder.com/200';" />
+                        </a>
+                        <div class="card-body d-flex flex-column">
+                            <h6 class="card-title text-truncate fw-semibold">
+                                <a href="@Url.Action("Details", "Home", new { id = product.ProductID })" class="text-decoration-none text-dark">
+                                    @product.ProductName
+                                </a>
+                            </h6>
+                            <p class="card-text text-danger fw-bold fs-5 mb-3">@string.Format("{0:N0} đ", product.ProductPrice)</p>
+
+                            <div class="mt-auto d-flex gap-2">
+                                <a href="@Url.Action("Details", "Home", new { id = product.ProductID })" class="btn btn-sm btn-outline-primary flex-grow-1">
+                                    <i class="fa fa-eye me-1"></i> Xem chi tiết
+                                </a>
+                                <a href="@Url.Action("AddToCart", "Cart", new { id = product.ProductID, quantity = 1 })" class="btn btn-sm btn-success" title="Thêm vào giỏ">
+                                    <i class="fa fa-cart-plus"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+
+        <!-- Thanh phân trang PagedList (Đảm bảo truyền đúng tham số categoryId) -->
+        <div class="d-flex justify-content-center mt-4">
+            @Html.PagedListPager(Model, page => Url.Action("ProductList", new { categoryId = ViewBag.CategoryId, page }),
+                new PagedListRenderOptions
+                {
+                    LiElementClasses = new[] { "page-item" },
+                    UlElementClasses = new[] { "pagination" }
+                })
+        </div>
+    }
+    else
+    {
+        <div class="text-center py-5 bg-light rounded shadow-sm">
+            <i class="fa fa-box-open fa-4x text-muted mb-3"></i>
+            <h4 class="text-muted mb-3">Hiện chưa có sản phẩm nào trong danh mục này!</h4>
+            <a href="@Url.Action("Index", "Home")" class="btn btn-primary px-4 fw-bold">Quay lại trang chủ</a>
+        </div>
+    }
+</div>
+
+<style>
+    /* CSS tinh chỉnh giao diện phân trang và hiệu ứng card */
+    .pagination > .page-item > .page-link {
+        color: #1E8A54;
+    }
+
+    .pagination > .page-item.active > .page-link {
+        background-color: #1E8A54;
+        border-color: #1E8A54;
+        color: white;
+    }
+
+    .product-card {
+        transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 .5rem 1rem rgba(0,0,0,.15) !important;
+        }
+</style>

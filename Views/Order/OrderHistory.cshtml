@@ -1,55 +1,68 @@
 ﻿@model IEnumerable<Be_25dh110275_NguyenHoangAnh.Models.Order>
 
 @{
-    ViewBag.Title = "Lịch sử đơn hàng";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "Lịch sử mua hàng - MyStore";
+    Layout = "~/Views/Shared/_CustomerLayout.cshtml";
 }
 
-<div class="container my-4">
-    <h2 class="mb-4 text-primary">LỊCH SỬ ĐƠN HÀNG CỦA TÔI</h2>
+<div class="container mt-4 mb-5">
+    <h2 class="mb-4 text-primary fw-bold"><i class="fa fa-history me-2"></i> Lịch Sử Mua Hàng</h2>
 
-    <div class="row mb-3">
-        <div class="col-md-12">
-            @Html.ActionLink("Tất cả đơn", "OrderHistory", new { statusSearch = "" }, new { @class = "btn btn-outline-primary mr-1" })
-            @Html.ActionLink("Thanh toán tiền mặt", "OrderHistory", new { statusSearch = "Thanh toán tiền mặt" }, new { @class = "btn btn-outline-info mr-1" })
-            @Html.ActionLink("Đã thanh toán", "OrderHistory", new { statusSearch = "Đã thanh toán" }, new { @class = "btn btn-outline-success" })
-        </div>
-    </div>
-
-    @if (!Model.Any())
+    @if (Model == null || !Model.Any())
     {
-        <div class="alert alert-warning">Bạn chưa có đơn hàng nào trong hệ thống.</div>
+        <div class="alert alert-info text-center p-4 shadow-sm border-0">
+            <h5><i class="fa fa-info-circle me-1"></i> Bạn chưa có đơn hàng nào!</h5>
+            <p class="mb-3">Hãy tiếp tục mua sắm để khám phá thêm nhiều sản phẩm hấp dẫn.</p>
+            <a href="@Url.Action("Index", "Home")" class="btn btn-primary"><i class="fa fa-shopping-cart me-1"></i> Mua sắm ngay</a>
+        </div>
     }
     else
     {
-        <table class="table table-bordered table-striped align-middle">
-            <thead class="thead-dark">
-                <tr>
-                    <th>Mã đơn</th>
-                    <th>Ngày đặt</th>
-                    <th>Địa chỉ giao hàng</th>
-                    <th>Tổng tiền</th>
-                    <th>Trạng thái thanh toán</th>
-                    <th>Chi tiết</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var order in Model)
-                {
-                    <tr>
-                        <td><strong>#@order.OrderID</strong></td>
-                        <td>@order.OrderDate.ToString("dd/MM/yyyy HH:mm")</td>
-                        <td>@order.AddressDelivery</td>
-                        <td class="text-danger font-weight-bold">@order.TotalAmount.ToString("N0") VNĐ</td>
-                        <td>
-                            <span class="badge badge-info">@order.PaymentStatus</span>
-                        </td>
-                        <td>
-                            @Html.ActionLink("Xem", "OrderDetailHistory", "Order", new { id = order.OrderID }, new { @class = "btn btn-sm btn-info" })
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
+        foreach (var order in Model)
+        {
+            <div class="card shadow-sm mb-4 border-0">
+                <div class="card-header bg-light d-flex justify-content-between align-items-center py-3">
+                    <div>
+                        <span class="fw-bold fs-6">Mã đơn hàng: <strong class="text-primary">#@order.OrderID</strong></span>
+                        <span class="text-muted ms-3">| Ngày đặt: @order.OrderDate.ToString("dd/MM/yyyy HH:mm")</span>
+                    </div>
+                    <div>
+                        <span class="badge bg-success px-3 py-2">@order.PaymentStatus</span>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <p class="mb-2"><strong>Địa chỉ giao hàng:</strong> @order.ShippingAddress</p>
+
+                    <table class="table table-hover mt-3 align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Sản phẩm</th>
+                                <th class="text-center">Số lượng</th>
+                                <th class="text-end">Đơn giá</th>
+                                <th class="text-end">Thành tiền</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (order.OrderDetails != null)
+                            {
+                                foreach (var item in order.OrderDetails)
+                                {
+                                    <tr>
+                                        <td>@(item.Product != null ? item.Product.ProductName : "Sản phẩm")</td>
+                                        <td class="text-center">@item.Quantity</td>
+                                        <td class="text-end">@string.Format("{0:N0} đ", item.UnitPrice)</td>
+                                        <td class="text-end">@string.Format("{0:N0} đ", item.Quantity * item.UnitPrice)</td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <div class="card-footer bg-white d-flex justify-content-between align-items-center py-3">
+                    <span class="text-muted">Tổng cộng:</span>
+                    <strong class="text-danger fs-5">@string.Format("{0:N0} đ", order.TotalAmount)</strong>
+                </div>
+            </div>
+        }
     }
 </div>

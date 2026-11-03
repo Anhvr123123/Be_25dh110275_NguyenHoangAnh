@@ -1,0 +1,73 @@
+﻿@{
+    ViewBag.Title = "Đăng Nhập Quản Trị";
+    Layout = null; // Hoặc layout trống của bạn
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title</title>
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+</head>
+<body class="bg-light d-flex align-items-center justify-content-center" style="height: 100vh;">
+
+    <div class="card shadow-sm p-4" style="width: 400px; border-radius: 10px;">
+        <div class="text-center mb-4">
+            <h3 class="fw-bold text-success">MY STORE</h3>
+            <p class="text-muted">Khu vực quản trị hệ thống</p>
+        </div>
+
+        @if (ViewBag.Error != null)
+        {
+            <div class="alert alert-danger text-center py-2" style="font-size: 14px;">
+                @ViewBag.Error
+            </div>
+        }
+
+        @using (Html.BeginForm("Login", "Account", new { area = "admin" }, FormMethod.Post))
+        {
+            @Html.AntiForgeryToken()
+
+            <div class="mb-3">
+                <label class="form-label fw-bold" style="font-size: 14px;">Tên đăng nhập Admin</label>
+                <div class="input-group">
+                    <span class="input-group-text"><i class="fas fa-user"></i></span>
+                    <!-- Thêm autocomplete="off" để trình duyệt không tự điền sẵn -->
+                    <input type="text" name="username" class="form-control" placeholder="Nhập tên đăng nhập..." autocomplete="off" required />
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label fw-bold" style="font-size: 14px;">Mật khẩu</label>
+                <div class="input-group">
+                    <span class="input-group-text"><i class="fas fa-lock"></i></span>
+                    <!-- Thêm autocomplete="new-password" để chặn autofill mật khẩu cũ -->
+                    <input type="password" name="password" class="form-control" placeholder="Nhập mật khẩu..." autocomplete="new-password" required />
+                </div>
+            </div>
+
+            <div class="d-grid mb-3">
+                <button type="submit" class="btn btn-success fw-bold py-2">ĐĂNG NHẬP QUẢN TRỊ</button>
+            </div>
+
+            <div class="text-center mb-2">
+                <a href="@Url.Action("Register", "Account", new { area = "admin" })" class="text-decoration-none fw-bold" style="font-size: 14px;">
+                    <i class="fas fa-user-plus me-1"></i> Đăng ký cho Admin
+                </a>
+            </div>
+
+            <div class="text-center">
+                <!-- Thay đổi đường dẫn trỏ về trang chủ Admin -->
+                <a href="@Url.Action("Index", "Home", new { area = "admin" })" class="text-muted text-decoration-none" style="font-size: 13px;">
+                    <i class="fas fa-arrow-left me-1"></i> Quay lại trang chủ Quản trị
+                </a>
+            </div>
+        }
+    </div>
+
+    <script src="~/Scripts/bootstrap.bundle.min.js"></script>
+</body>
+</html>

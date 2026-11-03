@@ -1,0 +1,73 @@
+﻿@model Be_25dh110275_NguyenHoangAnh.Models.User
+
+@{
+    ViewBag.Title = "Đăng Ký Tài Khoản Admin";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đăng Ký Tài Khoản Admin</title>
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+    <style>
+        body {
+            background-color: #f8f9fa;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .admin-register-card {
+            width: 100%;
+            max-width: 420px;
+            padding: 30px;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-register-card">
+        <h3 class="text-center fw-bold mb-1" style="color: #1E8A54;">MY STORE</h3>
+        <p class="text-center text-muted mb-4">Tạo tài khoản Quản trị viên mới</p>
+
+        @if (ViewBag.Error != null)
+        {
+            <div class="alert alert-danger py-2 text-center" style="font-size: 14px;">
+                <i class="fas fa-exclamation-circle me-1"></i> @ViewBag.Error
+            </div>
+        }
+
+        @using (Html.BeginForm("Register", "Account", new { area = "admin" }, FormMethod.Post))
+        {
+            @Html.AntiForgeryToken()
+            <div class="form-group mb-3">
+                <label class="fw-bold mb-1" style="font-size: 14px;">Tên đăng nhập Admin</label>
+                @Html.TextBoxFor(m => m.Username, new { @class = "form-control", placeholder = "Tạo username admin...", required = "required" })
+            </div>
+
+            <div class="form-group mb-4">
+                <label class="fw-bold mb-1" style="font-size: 14px;">Mật khẩu</label>
+                @Html.PasswordFor(m => m.Password, new { @class = "form-control", placeholder = "Tạo mật khẩu...", required = "required" })
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100 py-2 fw-bold" style="background-color: #1E8A54; border: none;">
+                TẠO TÀI KHOẢN ADMIN
+            </button>
+        }
+
+        <div class="text-center mt-3">
+            <a href="@Url.Action("Login", "Account", new { area = "admin" })" class="text-decoration-none text-muted" style="font-size: 13px;">
+                <i class="fas fa-arrow-left me-1"></i> Đã có tài khoản? Đăng nhập ngay
+            </a>
+        </div>
+    </div>
+</body>
+</html>
