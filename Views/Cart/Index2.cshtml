@@ -37,8 +37,11 @@
                                 {
                                     @Html.Hidden("id", item.ProductID)
                                     <div class="input-group">
-                                        <input type="number" name="quantity" value="@item.Quantity" min="1" class="form-control form-control-sm text-center" />
-                                        <button type="submit" class="btn btn-sm btn-outline-secondary" title="Cập nhật"><i class="fa fa-refresh"></i></button>
+                                        <!-- Tự động submit form khi thay đổi số lượng -->
+                                        <input type="number" name="quantity" value="@item.Quantity" min="1"
+                                               class="form-control form-control-sm text-center"
+                                               onchange="this.form.submit();" />
+                                        <button type="submit" class="btn btn-sm btn-outline-secondary" title="Cập nhật" style="display:none;"><i class="fa fa-refresh"></i></button>
                                     </div>
                                 }
                             </td>

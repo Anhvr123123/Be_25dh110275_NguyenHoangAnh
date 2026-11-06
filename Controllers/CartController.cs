@@ -11,7 +11,7 @@ namespace Be_25dh110275_NguyenHoangAnh.Controllers
     {
         private MyStoreEntities db = new MyStoreEntities();
 
-        // Lấy giỏ hàng từ Session
+        // Lấy giỏ hàng từ Session (Đảm bảo khởi tạo và lưu trữ chuẩn xác)
         private Cart GetCart()
         {
             Cart cart = Session["Cart"] as Cart;
@@ -23,7 +23,7 @@ namespace Be_25dh110275_NguyenHoangAnh.Controllers
             return cart;
         }
 
-        // GET: Cart/Index2 (hoặc Index)
+        // GET: Cart/Index2
         public ActionResult Index2(int? page)
         {
             var cart = GetCart();
@@ -57,6 +57,7 @@ namespace Be_25dh110275_NguyenHoangAnh.Controllers
                     quantity,
                     product.Category != null ? product.Category.CategoryName : "Khác"
                 );
+                Session["Cart"] = cart; // Lưu lại session
             }
             return RedirectToAction("Index2");
         }
@@ -65,6 +66,7 @@ namespace Be_25dh110275_NguyenHoangAnh.Controllers
         {
             var cart = GetCart();
             cart.RemoveItem(id);
+            Session["Cart"] = cart; // Lưu lại session
             return RedirectToAction("Index2");
         }
 
@@ -78,7 +80,11 @@ namespace Be_25dh110275_NguyenHoangAnh.Controllers
         public ActionResult UpdateQuantity(int id, int quantity)
         {
             var cart = GetCart();
-            cart.UpdateQuantity(id, quantity);
+            if (cart != null)
+            {
+                cart.UpdateQuantity(id, quantity);
+                Session["Cart"] = cart; // Bắt buộc gán lại Session để lưu số lượng mới
+            }
             return RedirectToAction("Index2");
         }
     }

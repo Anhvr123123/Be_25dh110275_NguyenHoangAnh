@@ -1,0 +1,55 @@
+﻿@model IEnumerable<Be_25dh110275_NguyenHoangAnh.Models.Order>
+
+@{
+    ViewBag.Title = "Lịch sử đơn hàng";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container my-4">
+    <h2 class="mb-4 text-primary">LỊCH SỬ ĐƠN HÀNG CỦA TÔI</h2>
+
+    <div class="row mb-3">
+        <div class="col-md-12">
+            @Html.ActionLink("Tất cả đơn", "OrderHistory", new { statusSearch = "" }, new { @class = "btn btn-outline-primary mr-1" })
+            @Html.ActionLink("Thanh toán tiền mặt", "OrderHistory", new { statusSearch = "Thanh toán tiền mặt" }, new { @class = "btn btn-outline-info mr-1" })
+            @Html.ActionLink("Đã thanh toán", "OrderHistory", new { statusSearch = "Đã thanh toán" }, new { @class = "btn btn-outline-success" })
+        </div>
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-warning">Bạn chưa có đơn hàng nào trong hệ thống.</div>
+    }
+    else
+    {
+        <table class="table table-bordered table-striped align-middle">
+            <thead class="thead-dark">
+                <tr>
+                    <th>Mã đơn</th>
+                    <th>Ngày đặt</th>
+                    <th>Địa chỉ giao hàng</th>
+                    <th>Tổng tiền</th>
+                    <th>Trạng thái thanh toán</th>
+                    <th>Chi tiết</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var order in Model)
+                {
+                    <tr>
+                        <td><strong>#@order.OrderID</strong></td>
+                        <td>@order.OrderDate.ToString("dd/MM/yyyy HH:mm")</td>
+                        <td>@order.AddressDelivery</td>
+                        <td class="text-danger font-weight-bold">@order.TotalAmount.ToString("N0") VNĐ</td>
+                        <td>
+                            <span class="badge badge-info">@order.PaymentStatus</span>
+                        </td>
+                        <td>
+                            @Html.ActionLink("Xem", "OrderDetailHistory", "Order", new { id = order.OrderID }, new { @class = "btn btn-sm btn-info" })
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</div>

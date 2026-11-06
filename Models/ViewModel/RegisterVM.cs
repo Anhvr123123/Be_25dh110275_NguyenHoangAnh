@@ -1,43 +1,33 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Web;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace Be_25dh110275_NguyenHoangAnh.Models.ViewModel
 {
     public class RegisterVM
     {
-        [Required]
+        [Required(ErrorMessage = "Vui lòng nhập tên đăng nhập.")]
         [Display(Name = "Tên đăng nhập")]
         public string Username { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Vui lòng nhập mật khẩu.")]
         [DataType(DataType.Password)]
         [Display(Name = "Mật khẩu")]
         public string Password { get; set; }
-
-        [Required]
+        [Required(ErrorMessage = "Vui lòng xác nhận mật khẩu.")]
         [DataType(DataType.Password)]
-        [Display(Name = "Xác nhận mật khẩu")]
         [Compare("Password", ErrorMessage = "Mật khẩu và xác nhận mật khẩu không khớp.")]
+        [Display(Name = "Xác nhận mật khẩu")]
         public string ConfirmPassword { get; set; }
-
-        [Required]
+        [Required(ErrorMessage = "Vui lòng nhập họ tên khách hàng.")]
         [Display(Name = "Họ tên")]
         public string CustomerName { get; set; }
 
-        [Required]
         [Display(Name = "Số điện thoại")]
-        [DataType(DataType.PhoneNumber)]
         public string CustomerPhone { get; set; }
 
-        [Required]
+        [EmailAddress(ErrorMessage = "Địa chỉ email không hợp lệ.")]
         [Display(Name = "Email")]
-        [DataType(DataType.EmailAddress)]
         public string CustomerEmail { get; set; }
 
-        [Required]
         [Display(Name = "Địa chỉ")]
         public string CustomerAddress { get; set; }
     }

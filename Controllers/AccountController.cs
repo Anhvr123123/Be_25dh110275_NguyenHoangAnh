@@ -1,9 +1,9 @@
-﻿using Be_25dh110275_NguyenHoangAnh.Models;
-using Be_25dh110275_NguyenHoangAnh.Models.ViewModel;
+﻿using System;
 using System.Linq;
 using System.Web.Mvc;
 using System.Web.Security;
-using System.Web.UI.WebControls;
+using Be_25dh110275_NguyenHoangAnh.Models;
+using Be_25dh110275_NguyenHoangAnh.Models.ViewModel;
 
 namespace Be_25dh110275_NguyenHoangAnh.Controllers
 {
@@ -24,32 +24,46 @@ namespace Be_25dh110275_NguyenHoangAnh.Controllers
         {
             if (ModelState.IsValid)
             {
-                var existingUser = db.Users.SingleOrDefault(u => u.Username == model.Username);
+                var existingUser = db.Users.Find(model.Username);
                 if (existingUser != null)
                 {
-                    ModelState.AddModelError("Username", "Tên đăng nhập này đã tồn tại!");
+                    ModelState.AddModelError("", "Tên đăng nhập này đã tồn tại!");
                     return View(model);
                 }
-                var user = new Be_25dh110275_NguyenHoangAnh.Models.User
+
+                Be_25dh110275_NguyenHoangAnh.Models.User newUser = new Be_25dh110275_NguyenHoangAnh.Models.User
                 {
                     Username = model.Username,
                     Password = model.Password,
-                    UserRole = "Customer"
+                    UserRole = "C"
                 };
-                db.Users.Add(user);
+                db.Users.Add(newUser);
 
-                var customer = new Customer
+                Customer customer = new Customer
                 {
+                    Username = model.Username,
                     CustomerName = model.CustomerName,
-                    CustomerEmail = model.CustomerEmail,
                     CustomerPhone = model.CustomerPhone,
-                    CustomerAddress = model.CustomerAddress,
-                    Username = model.Username
+                    CustomerEmail = model.CustomerEmail,
+                    CustomerAddress = model.CustomerAddress
                 };
                 db.Customers.Add(customer);
 
-                db.SaveChanges();
-                return RedirectToAction("Index", "Home");
+                try
+                {
+                    db.SaveChanges();
+                    return RedirectToAction("Login");
+                }
+                catch (System.Data.Entity.Validation.DbEntityValidationException ex)
+                {
+                    foreach (var entityValidationErrors in ex.EntityValidationErrors)
+                    {
+                        foreach (var validationError in entityValidationErrors.ValidationErrors)
+                        {
+                            ModelState.AddModelError("", $"{validationError.PropertyName}: {validationError.ErrorMessage}");
+                        }
+                    }
+                }
             }
             return View(model);
         }
@@ -67,28 +81,37 @@ namespace Be_25dh110275_NguyenHoangAnh.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = db.Users.SingleOrDefault(u => u.Username == model.Username && u.Password == model.Password && u.UserRole == "Customer");
+                var user = db.Users.FirstOrDefault(u => u.Username == model.Username && u.Password == model.Password);
                 if (user != null)
                 {
-                    Session["Username"] = user.Username;
-                    Session["UserRole"] = user.UserRole;
                     FormsAuthentication.SetAuthCookie(user.Username, false);
+                    Session["Username"] = user.Username;
+                    Session["Role"] = user.UserRole;
                     return RedirectToAction("Index", "Home");
                 }
                 else
                 {
-                    ModelState.AddModelError("", "Tên đăng nhập hoặc mật khẩu không đúng.");
+                    ModelState.AddModelError("", "Tên đăng nhập hoặc mật khẩu không chính xác.");
                 }
             }
             return View(model);
         }
 
-        // Logout
+        // GET: Account/Logout
         public ActionResult Logout()
         {
-            Session.Clear();
             FormsAuthentication.SignOut();
-            return RedirectToAction("Index", "Home");
+            Session.Clear();
+            return RedirectToAction("Login");
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                db.Dispose();
+            }
+            base.Dispose(disposing);
         }
     }
 }

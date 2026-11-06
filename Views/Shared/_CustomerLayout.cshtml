@@ -10,6 +10,7 @@
         CartCount = (cart != null && cart.Items != null) ? cart.Items.Sum(i => i.Quantity) : 0
     };
 }
+@Html.Action("CategoryMenu", "Home")
 <!DOCTYPE html>
 <html>
 <head>

@@ -6,18 +6,18 @@ namespace Be_25dh110275_NguyenHoangAnh.Models.ViewModel
 {
     public class Cart
     {
-        public decimal TotalPrice()
-        {
-            return Items.Sum(x => x.TotalPrice);
-        }
         private List<CartItem> items = new List<CartItem>();
         public IEnumerable<CartItem> Items => items;
-
-        public List<IGrouping<string, CartItem>> GroupedItems => items.GroupBy(i => i.Category).ToList();
 
         public int PageNumber { get; set; }
         public int PageSize { get; set; } = 6;
         public IPagedList<Be_25dh110275_NguyenHoangAnh.Models.Product> SimilarProducts { get; set; }
+
+        // Tổng tiền toàn giỏ hàng
+        public decimal TotalPrice()
+        {
+            return items.Sum(i => i.UnitPrice * i.Quantity);
+        }
 
         public void AddItem(int productId, string productImage, string productName, decimal unitPrice, int quantity, string category)
         {
@@ -37,22 +37,25 @@ namespace Be_25dh110275_NguyenHoangAnh.Models.ViewModel
             items.RemoveAll(i => i.ProductID == productId);
         }
 
-        public decimal TotalValue()
-        {
-            return items.Sum(i => i.TotalPrice);
-        }
-
         public void Clear()
         {
             items.Clear();
         }
 
+        // Cập nhật số lượng chuẩn xác
         public void UpdateQuantity(int productId, int quantity)
         {
             var item = items.FirstOrDefault(i => i.ProductID == productId);
             if (item != null)
             {
-                item.Quantity = quantity;
+                if (quantity > 0)
+                {
+                    item.Quantity = quantity;
+                }
+                else
+                {
+                    items.Remove(item);
+                }
             }
         }
     }

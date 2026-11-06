@@ -1,0 +1,53 @@
+﻿@model Be_25dh110275_NguyenHoangAnh.Models.Order
+
+@{
+    ViewBag.Title = "Chi tiết đơn hàng #" + Model.OrderID;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<divc lass="container my-4">
+<h2>CHI TIẾT ĐƠN HÀNG #@Model.OrderID</h2>
+<hr />
+
+<div class="row mb-4">
+    <div class="col-md-6">
+        <p><strong>Ngày đặt:</strong> @Model.OrderDate.ToString("dd/MM/yyyy HH:mm")</p>
+        <p><strong>Trạng thái thanh toán:</strong> <span class="badge badge-success">@Model.PaymentStatus</span></p>
+        <p><strong>Địa chỉ / Hình thức nhận hàng:</strong> @Model.AddressDelivery</p>        <div class="col-md-6">
+            <p><strong>Địa chỉ nhận hàng:</strong> @Model.ShippingAddress</p>
+            <p><strong>Tổng tiền đơn hàng:</strong> <span class="text-danger font-weight-bold">@Model.TotalAmount.ToString("N0") VNĐ</span></p>
+        </div>
+    </div>
+
+    <h4>Danh sách sản phẩm đã đặt</h4>
+    <table class="table table-bordered">
+        <thead class="thead-light">
+            <tr>
+                <th>Sản phẩm</th>
+                <th>Hình ảnh</th>
+                <th>Đơn giá</th>
+                <th>Số lượng</th>
+                <th>Thành tiền</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.OrderDetails)
+            {
+                var amount = item.Quantity * item.UnitPrice;
+                <tr>
+                    <td>@item.Product.ProductName</td>
+                    <td>
+                        <img src="@item.Product.ProductImage" style="max-width: 60px; height: auto;" alt="@item.Product.ProductName" />
+                    </td>
+                    <td>@item.UnitPrice.ToString("N0") VNĐ</td>
+                    <td>@item.Quantity</td>
+                    <td class="text-danger">@amount.ToString("N0") VNĐ</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <div class="mt-3">
+        @Html.ActionLink(" Quay lại lịch sử đơn hàng", "OrderHistory", "Order", null, new { @class = "btn btn-secondary" })
+    </div>
+</div>

@@ -1,0 +1,13 @@
+﻿@model IEnumerable<Be_25dh110275_NguyenHoangAnh.Models.Category>
+
+<li class="nav-item dropdown">
+    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownCategory" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        Danh mục sản phẩm
+    </a>
+    <div class="dropdown-menu" aria-labelledby="navbarDropdownCategory">
+        @foreach (var item in Model)
+        {
+            <a class="dropdown-item" href="@Url.Action("ProductList", "Home", new { categoryID = item.CategoryID })">@item.CategoryName</a>
+        }
+    </div>
+</li>

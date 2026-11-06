@@ -41,6 +41,12 @@ namespace Be_25dh110275_NguyenHoangAnh.Controllers
 
             return View(model);
         }
+        [ChildActionOnly]
+        public ActionResult CategoryMenu()
+        {
+            var categories = db.Categories.ToList();
+            return PartialView("CategoryMenuPV", categories);
+        }
         // GET: Home/Details/5
         public ActionResult Details(int? id)
         {
